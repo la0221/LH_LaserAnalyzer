@@ -35,7 +35,7 @@ namespace UMS_IoT
                 {
                     //Debug.WriteLine("Get Bat Voltage");
                     SerialSend(IoT_Device_Port, "V");
-                    Thread.Sleep(3000);
+                    Thread.Sleep(30000);
                 }
             }
         }
