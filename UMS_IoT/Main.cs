@@ -18,6 +18,10 @@ namespace UMS_IoT
         private Queue<double> dataQueue = new Queue<double>(100);
         SerialPort IoT_Device_Port = new SerialPort();
         Thread GetBatVoltage_thread;
+        private int PreSensorState = -1;
+        private int SensorState = -1;
+        private int StartSensor = 0;
+        private int SensorProcess_idx = -2;
         private bool CheckUpdate_Up = false;
         private bool CheckUpdate_Low = false;
         private bool UpdateCompleteUp = false;
@@ -38,8 +42,9 @@ namespace UMS_IoT
                 if (IoT_Device_Port.IsOpen && BT_stat_lb.Text == "已連線")
                 {
                     //Debug.WriteLine("Get Bat Voltage");
+                    Thread.Sleep(5000);
                     SerialSend(IoT_Device_Port, "V");
-                    Thread.Sleep(300000);
+                    Thread.Sleep(255000);
                 }
             }
         }
@@ -54,6 +59,7 @@ namespace UMS_IoT
                     COM_Connect_btn.BackColor = Control.DefaultBackColor;
                     COM_Connect_btn.Text = "開啟";
                     IoT_Device_Port.DataReceived -= new SerialDataReceivedEventHandler(IoT_Device_DataReceived);
+                    State_init();
                     return;
                 }
                 catch (Exception disconn)
@@ -97,12 +103,21 @@ namespace UMS_IoT
             if (IoT_Device_Port.IsOpen)
             {
                 int len = IoT_Device_Port.BytesToRead;
+                string rcv = string.Empty;
                 if (len != 0)
                 {
                     //byte[] buff = new byte[len];
                     //IoT_Device_Port.Read(buff, 0, len);
                     //string rcv = Encoding.Default.GetString(buff);
-                    string rcv = IoT_Device_Port.ReadLine();
+                    try
+                    {
+                        rcv = IoT_Device_Port.ReadLine();
+                    }
+                    catch
+                    {
+                        Debug.WriteLine("未發現換行");
+                        IoT_Device_Port.DiscardInBuffer();
+                    }
                     Debug.WriteLine("Receive: " + rcv.Trim());
                     // 指令、電量回傳
                     if(rcv.Contains("BTNC"))
@@ -119,6 +134,8 @@ namespace UMS_IoT
                         SerialSend(IoT_Device_Port, "U");   // 取得上限
                         Thread.Sleep(200);
                         SerialSend(IoT_Device_Port, "D");   // 取得下限
+                        Thread.Sleep(200);
+                        SerialSend(IoT_Device_Port, "V");   // 取得下限
                     }
 
                     else if(rcv.Contains("BV"))
@@ -163,19 +180,88 @@ namespace UMS_IoT
                             Lowlimit_textBox.Text = float.Parse(rcv.Substring(rcv.IndexOf(":") + 1).Trim()).ToString("##0.0#");
                     }
 
+                    //else if(rcv.Contains("LowBat"))
+                    //{
+                    //    LowBat_lb.ForeColor = Color.Red;
+                    //}
+
+                    else if(rcv.Contains("TEST STOP"))
+                    {
+                        SensorProcess_idx = 2;
+                    }
+
+                    else if(rcv.Contains("TEST START"))
+                    {
+                        SensorProcess_idx = -1;
+                    }
+
                     else if(rcv.Contains("Sensor"))
                     {
                         return;
                     }
 
                     // 千分表數據
-                    else if(rcv.Contains(',') && rcv.Split(',')[1].Contains("-1")) // sensor尚未偵測
+                    else if(rcv.Contains(',') && rcv.Split(',')[1].Contains("-1"))  // sensor尚未偵測
                     {
-                        return;
+                        SensorState = -1;
                     }
-                    else
+                    else if(rcv.Contains(","))
+                    {
+                        SensorState = int.Parse(rcv.Split(',')[1]);
                         rcv_textBox.AppendText(DateTime.Now.ToString("MM-dd hh:mm:ss.fff") + ", " + rcv + "\r\n");
+                    }
+
+                    SensorProcess();
+                    PreSensorState = SensorState;
                 }
+            }
+        }
+
+        private void SensorProcess()
+        {
+            switch (SensorProcess_idx)
+            {
+                case -2:    //  Standby
+                    Debug.WriteLine("SensorProcess(): Standby");
+                    //SensorProcess_idx++;
+                    break;
+
+                case -1:    //  偵測到第一Sensor
+                    TestState_lb.Text = "量測中：等待起始位置";
+                    Debug.WriteLine("SensorProcess():waiting for first sensor");
+                    if (PreSensorState == -1 && SensorState != -1)      //  偵測到第一Sensor
+                    {
+                        Debug.WriteLine("SensorProcess(): First Sensor Dectected");
+                        StartSensor = SensorState;                                       //   記憶起始Sensor
+                        TestState_lb.Text = "量測開始";
+                        SensorProcess_idx++;
+                    }
+                    break;
+
+                case 0:     //   脫離起始Sensor
+                    Debug.WriteLine("SensorProcess(): Leave First Sensor");
+                    if (SensorState != StartSensor)                             //   脫離起始Sensor
+                    {
+                        SensorProcess_idx++;
+                    }
+                    break;
+
+                case 1:    //   等待回到起始Sensor
+                    Debug.WriteLine("SensorProcess(): Waiting for going to first sensor");
+                    if (SensorState == StartSensor)
+                    {
+                        SerialSend(IoT_Device_Port, "S");                        //    停止量測
+                        SensorProcess_idx++;
+                    }
+                    break;
+
+                case 2:
+                    Debug.WriteLine("SensorProcess(): Testing over");
+                    PreSensorState = -1;
+                    SensorState = -1;
+                    SensorProcess_idx = -2;
+                    TestState_lb.Text = "量測結束";
+                    break;
             }
         }
 
@@ -224,6 +310,7 @@ namespace UMS_IoT
                                 IoT_Device_Port.DataReceived -= new SerialDataReceivedEventHandler(IoT_Device_DataReceived);
                                 COM_Connect_btn.BackColor = Control.DefaultBackColor;
                                 COM_Connect_btn.Text = "開啟";
+                                State_init();
                             }
                             break;
                     }
@@ -289,10 +376,10 @@ namespace UMS_IoT
                 float u, l;
                 if (float.TryParse(Uplimit_textBox.Text, out u) && float.TryParse(Lowlimit_textBox.Text, out l))
                 {
-                    SerialSend(IoT_Device_Port, "U" + u.ToString("##0.0#"));
+                    SerialSend(IoT_Device_Port, "UL" + u.ToString("##0.0#"));
                     CheckUpdate_Up = true;
                     Thread.Sleep(50);
-                    SerialSend(IoT_Device_Port, "D" + l.ToString("##0.0#"));
+                    SerialSend(IoT_Device_Port, "DL" + l.ToString("##0.0#"));
                     CheckUpdate_Low = true;
 
                     if(CheckLimitUpdate())
@@ -329,6 +416,17 @@ namespace UMS_IoT
                 }
             }
             return false;
+        }
+
+        private void State_init()
+        {
+            BT_stat_lb.ForeColor = Color.Red;
+            BT_stat_lb.Text = "未連線";
+            BatVol_lb.Text = "0.00V";
+            TestState_lb.Text = "未開始";
+            Uplimit_textBox.Text = string.Empty;
+            Lowlimit_textBox.Text = string.Empty;
+            LowBat_lb.ForeColor = SystemColors.ControlDarkDark;
         }
 
         private void Main_Load(object sender, EventArgs e)
@@ -420,11 +518,13 @@ namespace UMS_IoT
 
         private void StartRead_button_Click(object sender, EventArgs e)
         {
-            SerialSend(IoT_Device_Port, "K");
+            SensorProcess_idx = -1;
+            SerialSend(IoT_Device_Port, "KSTART");
         }
 
         private void StopRead_button_Click(object sender, EventArgs e)
         {
+            SensorProcess_idx = 2;
             SerialSend(IoT_Device_Port, "S");
         }
 
@@ -457,8 +557,17 @@ namespace UMS_IoT
         {
             SerialSend(IoT_Device_Port, "T");
         }
+
         #endregion
 
+        private void BT_stat_lb_Click(object sender, EventArgs e)
+        {
 
+        }
+
+        private void label7_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

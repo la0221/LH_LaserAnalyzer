@@ -37,11 +37,11 @@ namespace UMS_IoT
             this.rcv_textBox = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.GetSensor_button = new System.Windows.Forms.Button();
-            this.StopRead_button = new System.Windows.Forms.Button();
             this.BT_Stat_button = new System.Windows.Forms.Button();
-            this.BuzzOff_button = new System.Windows.Forms.Button();
             this.BuzzOn_button = new System.Windows.Forms.Button();
             this.Read_button = new System.Windows.Forms.Button();
+            this.StopRead_button = new System.Windows.Forms.Button();
+            this.BuzzOff_button = new System.Windows.Forms.Button();
             this.GetBatV_button = new System.Windows.Forms.Button();
             this.StartRead_button = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -51,13 +51,14 @@ namespace UMS_IoT
             this.label3 = new System.Windows.Forms.Label();
             this.BT_stat_lb = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.SetLimit_button = new System.Windows.Forms.Button();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.Uplimit_textBox = new System.Windows.Forms.TextBox();
-            this.Lowlimit_textBox = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.Lowlimit_textBox = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.SetLimit_button = new System.Windows.Forms.Button();
+            this.Uplimit_textBox = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
+            this.TestState_lb = new System.Windows.Forms.Label();
             this.groupBox10.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -104,7 +105,7 @@ namespace UMS_IoT
             // exp2csv_btn
             // 
             this.exp2csv_btn.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.exp2csv_btn.Location = new System.Drawing.Point(994, 389);
+            this.exp2csv_btn.Location = new System.Drawing.Point(1001, 389);
             this.exp2csv_btn.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.exp2csv_btn.Name = "exp2csv_btn";
             this.exp2csv_btn.Size = new System.Drawing.Size(459, 71);
@@ -116,12 +117,12 @@ namespace UMS_IoT
             // clear_tb_btn
             // 
             this.clear_tb_btn.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.clear_tb_btn.Location = new System.Drawing.Point(994, 468);
+            this.clear_tb_btn.Location = new System.Drawing.Point(1001, 547);
             this.clear_tb_btn.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.clear_tb_btn.Name = "clear_tb_btn";
             this.clear_tb_btn.Size = new System.Drawing.Size(459, 71);
             this.clear_tb_btn.TabIndex = 50;
-            this.clear_tb_btn.Text = "清除";
+            this.clear_tb_btn.Text = "清除接收視窗";
             this.clear_tb_btn.UseVisualStyleBackColor = true;
             this.clear_tb_btn.Click += new System.EventHandler(this.clear_tb_btn_Click);
             // 
@@ -143,16 +144,16 @@ namespace UMS_IoT
             this.groupBox1.Controls.Add(this.BT_Stat_button);
             this.groupBox1.Controls.Add(this.BuzzOn_button);
             this.groupBox1.Controls.Add(this.Read_button);
-            this.groupBox1.Controls.Add(this.GetBatV_button);
             this.groupBox1.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.groupBox1.Location = new System.Drawing.Point(1533, 72);
+            this.groupBox1.Location = new System.Drawing.Point(1002, 954);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(5, 4, 5, 4);
-            this.groupBox1.Size = new System.Drawing.Size(484, 309);
+            this.groupBox1.Size = new System.Drawing.Size(434, 71);
             this.groupBox1.TabIndex = 49;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "DEBUG";
+            this.groupBox1.Visible = false;
             // 
             // GetSensor_button
             // 
@@ -167,19 +168,6 @@ namespace UMS_IoT
             this.GetSensor_button.UseVisualStyleBackColor = true;
             this.GetSensor_button.Click += new System.EventHandler(this.GetSensor_button_Click);
             // 
-            // StopRead_button
-            // 
-            this.StopRead_button.AutoSize = true;
-            this.StopRead_button.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.StopRead_button.Location = new System.Drawing.Point(994, 231);
-            this.StopRead_button.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
-            this.StopRead_button.Name = "StopRead_button";
-            this.StopRead_button.Size = new System.Drawing.Size(460, 71);
-            this.StopRead_button.TabIndex = 4;
-            this.StopRead_button.Text = "停止量測";
-            this.StopRead_button.UseVisualStyleBackColor = true;
-            this.StopRead_button.Click += new System.EventHandler(this.StopRead_button_Click);
-            // 
             // BT_Stat_button
             // 
             this.BT_Stat_button.AutoSize = true;
@@ -193,24 +181,11 @@ namespace UMS_IoT
             this.BT_Stat_button.UseVisualStyleBackColor = true;
             this.BT_Stat_button.Click += new System.EventHandler(this.BT_Stat_button_Click);
             // 
-            // BuzzOff_button
-            // 
-            this.BuzzOff_button.AutoSize = true;
-            this.BuzzOff_button.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.BuzzOff_button.Location = new System.Drawing.Point(994, 310);
-            this.BuzzOff_button.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
-            this.BuzzOff_button.Name = "BuzzOff_button";
-            this.BuzzOff_button.Size = new System.Drawing.Size(459, 71);
-            this.BuzzOff_button.TabIndex = 4;
-            this.BuzzOff_button.Text = "關閉警示";
-            this.BuzzOff_button.UseVisualStyleBackColor = true;
-            this.BuzzOff_button.Click += new System.EventHandler(this.BuzzOff_button_Click);
-            // 
             // BuzzOn_button
             // 
             this.BuzzOn_button.AutoSize = true;
             this.BuzzOn_button.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.BuzzOn_button.Location = new System.Drawing.Point(10, 216);
+            this.BuzzOn_button.Location = new System.Drawing.Point(21, 137);
             this.BuzzOn_button.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.BuzzOn_button.Name = "BuzzOn_button";
             this.BuzzOn_button.Size = new System.Drawing.Size(210, 71);
@@ -223,7 +198,7 @@ namespace UMS_IoT
             // 
             this.Read_button.AutoSize = true;
             this.Read_button.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.Read_button.Location = new System.Drawing.Point(10, 137);
+            this.Read_button.Location = new System.Drawing.Point(21, 58);
             this.Read_button.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.Read_button.Name = "Read_button";
             this.Read_button.Size = new System.Drawing.Size(210, 71);
@@ -232,16 +207,42 @@ namespace UMS_IoT
             this.Read_button.UseVisualStyleBackColor = true;
             this.Read_button.Click += new System.EventHandler(this.Read_button_Click);
             // 
+            // StopRead_button
+            // 
+            this.StopRead_button.AutoSize = true;
+            this.StopRead_button.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.StopRead_button.Location = new System.Drawing.Point(1001, 231);
+            this.StopRead_button.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
+            this.StopRead_button.Name = "StopRead_button";
+            this.StopRead_button.Size = new System.Drawing.Size(460, 71);
+            this.StopRead_button.TabIndex = 4;
+            this.StopRead_button.Text = "停止量測";
+            this.StopRead_button.UseVisualStyleBackColor = true;
+            this.StopRead_button.Click += new System.EventHandler(this.StopRead_button_Click);
+            // 
+            // BuzzOff_button
+            // 
+            this.BuzzOff_button.AutoSize = true;
+            this.BuzzOff_button.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.BuzzOff_button.Location = new System.Drawing.Point(1001, 310);
+            this.BuzzOff_button.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
+            this.BuzzOff_button.Name = "BuzzOff_button";
+            this.BuzzOff_button.Size = new System.Drawing.Size(459, 71);
+            this.BuzzOff_button.TabIndex = 4;
+            this.BuzzOff_button.Text = "關閉警示";
+            this.BuzzOff_button.UseVisualStyleBackColor = true;
+            this.BuzzOff_button.Click += new System.EventHandler(this.BuzzOff_button_Click);
+            // 
             // GetBatV_button
             // 
             this.GetBatV_button.AutoSize = true;
             this.GetBatV_button.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.GetBatV_button.Location = new System.Drawing.Point(10, 58);
+            this.GetBatV_button.Location = new System.Drawing.Point(1001, 468);
             this.GetBatV_button.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.GetBatV_button.Name = "GetBatV_button";
-            this.GetBatV_button.Size = new System.Drawing.Size(210, 71);
+            this.GetBatV_button.Size = new System.Drawing.Size(459, 71);
             this.GetBatV_button.TabIndex = 4;
-            this.GetBatV_button.Text = "取得電壓";
+            this.GetBatV_button.Text = "更新電壓";
             this.GetBatV_button.UseVisualStyleBackColor = true;
             this.GetBatV_button.Click += new System.EventHandler(this.GetBatV_button_Click);
             // 
@@ -249,7 +250,7 @@ namespace UMS_IoT
             // 
             this.StartRead_button.AutoSize = true;
             this.StartRead_button.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.StartRead_button.Location = new System.Drawing.Point(994, 152);
+            this.StartRead_button.Location = new System.Drawing.Point(1001, 152);
             this.StartRead_button.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.StartRead_button.Name = "StartRead_button";
             this.StartRead_button.Size = new System.Drawing.Size(459, 71);
@@ -319,6 +320,7 @@ namespace UMS_IoT
             this.BT_stat_lb.Size = new System.Drawing.Size(131, 47);
             this.BT_stat_lb.TabIndex = 52;
             this.BT_stat_lb.Text = "未連線";
+            this.BT_stat_lb.Click += new System.EventHandler(this.BT_stat_lb_Click);
             // 
             // groupBox2
             // 
@@ -329,7 +331,7 @@ namespace UMS_IoT
             this.groupBox2.Controls.Add(this.SetLimit_button);
             this.groupBox2.Controls.Add(this.Uplimit_textBox);
             this.groupBox2.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.groupBox2.Location = new System.Drawing.Point(993, 547);
+            this.groupBox2.Location = new System.Drawing.Point(1001, 626);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(5, 4, 5, 4);
@@ -337,6 +339,43 @@ namespace UMS_IoT
             this.groupBox2.TabIndex = 49;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "上下限設置";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label6.Location = new System.Drawing.Point(57, 236);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(340, 47);
+            this.label6.TabIndex = 52;
+            this.label6.Text = "(取至小數點後兩位)";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label5.Location = new System.Drawing.Point(19, 164);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(94, 47);
+            this.label5.TabIndex = 52;
+            this.label5.Text = "下限";
+            // 
+            // Lowlimit_textBox
+            // 
+            this.Lowlimit_textBox.Location = new System.Drawing.Point(131, 161);
+            this.Lowlimit_textBox.Name = "Lowlimit_textBox";
+            this.Lowlimit_textBox.Size = new System.Drawing.Size(188, 57);
+            this.Lowlimit_textBox.TabIndex = 53;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label4.Location = new System.Drawing.Point(19, 84);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(94, 47);
+            this.label4.TabIndex = 52;
+            this.label4.Text = "上限";
             // 
             // SetLimit_button
             // 
@@ -351,49 +390,12 @@ namespace UMS_IoT
             this.SetLimit_button.UseVisualStyleBackColor = true;
             this.SetLimit_button.Click += new System.EventHandler(this.SetLimit_button_Click);
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label4.Location = new System.Drawing.Point(19, 84);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(94, 47);
-            this.label4.TabIndex = 52;
-            this.label4.Text = "上限";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label5.Location = new System.Drawing.Point(19, 164);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(94, 47);
-            this.label5.TabIndex = 52;
-            this.label5.Text = "下限";
-            // 
             // Uplimit_textBox
             // 
             this.Uplimit_textBox.Location = new System.Drawing.Point(131, 81);
             this.Uplimit_textBox.Name = "Uplimit_textBox";
             this.Uplimit_textBox.Size = new System.Drawing.Size(188, 57);
             this.Uplimit_textBox.TabIndex = 53;
-            // 
-            // Lowlimit_textBox
-            // 
-            this.Lowlimit_textBox.Location = new System.Drawing.Point(131, 161);
-            this.Lowlimit_textBox.Name = "Lowlimit_textBox";
-            this.Lowlimit_textBox.Size = new System.Drawing.Size(188, 57);
-            this.Lowlimit_textBox.TabIndex = 53;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label6.Location = new System.Drawing.Point(57, 236);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(340, 47);
-            this.label6.TabIndex = 52;
-            this.label6.Text = "(取至小數點後兩位)";
             // 
             // label7
             // 
@@ -404,18 +406,33 @@ namespace UMS_IoT
             this.label7.Size = new System.Drawing.Size(168, 47);
             this.label7.TabIndex = 52;
             this.label7.Text = "量測狀態";
+            this.label7.Click += new System.EventHandler(this.label7_Click);
+            // 
+            // TestState_lb
+            // 
+            this.TestState_lb.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.TestState_lb.Location = new System.Drawing.Point(994, 75);
+            this.TestState_lb.Name = "TestState_lb";
+            this.TestState_lb.Size = new System.Drawing.Size(459, 47);
+            this.TestState_lb.TabIndex = 52;
+            this.TestState_lb.Text = "未開始";
+            this.TestState_lb.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.TestState_lb.Click += new System.EventHandler(this.label7_Click);
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(2216, 1069);
+            this.ClientSize = new System.Drawing.Size(1475, 1069);
             this.Controls.Add(this.LowBat_lb);
             this.Controls.Add(this.StopRead_button);
             this.Controls.Add(this.BuzzOff_button);
             this.Controls.Add(this.BatVol_lb);
+            this.Controls.Add(this.GetBatV_button);
             this.Controls.Add(this.BT_stat_lb);
+            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.TestState_lb);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -425,7 +442,6 @@ namespace UMS_IoT
             this.Controls.Add(this.clear_tb_btn);
             this.Controls.Add(this.exp2csv_btn);
             this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox10);
             this.Name = "Main";
             this.Text = "UMS Test";
@@ -472,6 +488,7 @@ namespace UMS_IoT
         private System.Windows.Forms.TextBox Uplimit_textBox;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label TestState_lb;
     }
 }
 
