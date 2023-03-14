@@ -18,6 +18,10 @@ namespace UMS_IoT
         private Queue<double> dataQueue = new Queue<double>(100);
         SerialPort IoT_Device_Port = new SerialPort();
         Thread GetBatVoltage_thread;
+        private bool CheckUpdate_Up = false;
+        private bool CheckUpdate_Low = false;
+        private bool UpdateCompleteUp = false;
+        private bool UpdateCompleteLow = false;
         public Main()
         {
             CheckForIllegalCrossThreadCalls = false;
@@ -31,11 +35,11 @@ namespace UMS_IoT
         {
             while (true)
             {
-                if (IoT_Device_Port.IsOpen)
+                if (IoT_Device_Port.IsOpen && BT_stat_lb.Text == "已連線")
                 {
                     //Debug.WriteLine("Get Bat Voltage");
                     SerialSend(IoT_Device_Port, "V");
-                    Thread.Sleep(30000);
+                    Thread.Sleep(300000);
                 }
             }
         }
@@ -74,7 +78,11 @@ namespace UMS_IoT
                     COM_Connect_btn.Text = "關閉";
 
                     Thread.Sleep(100);
-                    SerialSend(IoT_Device_Port, "T");
+                    SerialSend(IoT_Device_Port, "T");   // 取得藍牙狀態
+                    //Thread.Sleep(200);
+                    //SerialSend(IoT_Device_Port, "U");   // 取得上限
+                    //Thread.Sleep(200);
+                    //SerialSend(IoT_Device_Port, "D");   // 取得下限
                 }
                 catch (Exception conn)
                 {
@@ -91,9 +99,10 @@ namespace UMS_IoT
                 int len = IoT_Device_Port.BytesToRead;
                 if (len != 0)
                 {
-                    byte[] buff = new byte[len];
-                    IoT_Device_Port.Read(buff, 0, len);
-                    string rcv = Encoding.Default.GetString(buff);
+                    //byte[] buff = new byte[len];
+                    //IoT_Device_Port.Read(buff, 0, len);
+                    //string rcv = Encoding.Default.GetString(buff);
+                    string rcv = IoT_Device_Port.ReadLine();
                     Debug.WriteLine("Receive: " + rcv.Trim());
                     // 指令、電量回傳
                     if(rcv.Contains("BTNC"))
@@ -106,18 +115,66 @@ namespace UMS_IoT
                     {
                         BT_stat_lb.ForeColor = Color.LimeGreen;
                         BT_stat_lb.Text = "已連線";
+                        Thread.Sleep(200);
+                        SerialSend(IoT_Device_Port, "U");   // 取得上限
+                        Thread.Sleep(200);
+                        SerialSend(IoT_Device_Port, "D");   // 取得下限
                     }
 
                     else if(rcv.Contains("BV"))
                     {
-                        BatVol_lb.Text = rcv.Trim().Remove(0, 2) + "V"; 
+                        string bat_v =rcv.Trim().Remove(0, 2);
+                        BatVol_lb.Text = bat_v+ "V";
+                        if (float.Parse(bat_v) < 3.5)
+                            LowBat_lb.ForeColor = Color.Red;
+                        else
+                            LowBat_lb.ForeColor = SystemColors.ControlDarkDark;
+                    }
+
+                    else if(rcv.Contains("Uplimit"))
+                    {
+                        if (CheckUpdate_Up)
+                        {
+                            Debug.WriteLine("Check Update Up");
+                            Debug.WriteLine(float.Parse(rcv.Substring(rcv.IndexOf(":") + 1).Trim()).ToString("##0.0#"));
+                            if (float.Parse(Uplimit_textBox.Text) == float.Parse(rcv.Substring(rcv.IndexOf(":") + 1).Trim()))
+                            {                             
+                                UpdateCompleteUp = true;
+                            }
+                            CheckUpdate_Up = false;
+                        }
+                        else
+                            Uplimit_textBox.Text = float.Parse(rcv.Substring(rcv.IndexOf(":") + 1).Trim()).ToString("##0.0#");
+                    }   
+
+                    else if(rcv.Contains("Lowlimit"))
+                    {
+                        if(CheckUpdate_Low)
+                        {
+                            Debug.WriteLine("Check Update Low");
+                            Debug.WriteLine(float.Parse(rcv.Substring(rcv.IndexOf(":") + 1).Trim()).ToString("##0.0#"));
+                            if (float.Parse(Lowlimit_textBox.Text) == float.Parse(rcv.Substring(rcv.IndexOf(":") + 1).Trim()))
+                            {
+                                UpdateCompleteLow = true;
+                            }
+                            CheckUpdate_Low = false;
+                        }
+                        else
+                            Lowlimit_textBox.Text = float.Parse(rcv.Substring(rcv.IndexOf(":") + 1).Trim()).ToString("##0.0#");
+                    }
+
+                    else if(rcv.Contains("Sensor"))
+                    {
+                        return;
                     }
 
                     // 千分表數據
                     else if(rcv.Contains(',') && rcv.Split(',')[1].Contains("-1")) // sensor尚未偵測
+                    {
                         return;
+                    }
                     else
-                        rcv_textBox.AppendText(DateTime.Now.ToString("MM-dd hh:mm:ss.fff") + ", " + rcv);
+                        rcv_textBox.AppendText(DateTime.Now.ToString("MM-dd hh:mm:ss.fff") + ", " + rcv + "\r\n");
                 }
             }
         }
@@ -142,7 +199,6 @@ namespace UMS_IoT
                 COM_ComportBox.Text = IoT_Device_Port.PortName;
             }
         }
-
 
         protected override void WndProc(ref Message m)
         {
@@ -220,9 +276,68 @@ namespace UMS_IoT
             else return;
         }
 
+        private void clear_tb_btn_Click(object sender, EventArgs e)
+        {
+            rcv_textBox.Clear();
+        }
+
+        private void SetLimit_button_Click(object sender, EventArgs e)
+        {
+            Thread SetLimit = new Thread(
+            delegate ()
+            {
+                float u, l;
+                if (float.TryParse(Uplimit_textBox.Text, out u) && float.TryParse(Lowlimit_textBox.Text, out l))
+                {
+                    SerialSend(IoT_Device_Port, "U" + u.ToString("##0.0#"));
+                    CheckUpdate_Up = true;
+                    Thread.Sleep(50);
+                    SerialSend(IoT_Device_Port, "D" + l.ToString("##0.0#"));
+                    CheckUpdate_Low = true;
+
+                    if(CheckLimitUpdate())
+                        MessageBox.Show("設定完成");
+                    else
+                        MessageBox.Show("設定失敗，請再試一次");
+                }
+                else
+                {
+                    MessageBox.Show("參數錯誤，請確認輸入");
+                    return;
+                }
+            });
+            SetLimit.Start();
+        }
+
+        private bool CheckLimitUpdate()
+        {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            for (int i = 0; i < 100000000; i++) // nEntries is typically more than 500,000
+            {
+                //Debug.WriteLine("等待回應");
+                if (UpdateCompleteLow && UpdateCompleteUp)
+                {
+                    UpdateCompleteUp = false;
+                    UpdateCompleteLow = false;
+                    return true;
+                }
+
+                if (sw.ElapsedMilliseconds > 2000) //   1000ms
+                {
+                    break;
+                }
+            }
+            return false;
+        }
+
         private void Main_Load(object sender, EventArgs e)
         {
-            
+
+        }
+        private void Main_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Environment.Exit(0);
         }
 
         #region 即時繪置折線圖
@@ -303,11 +418,6 @@ namespace UMS_IoT
 
         #region Debug
 
-        private void clear_tb_btn_Click(object sender, EventArgs e)
-        {
-            rcv_textBox.Clear();
-        }
-
         private void StartRead_button_Click(object sender, EventArgs e)
         {
             SerialSend(IoT_Device_Port, "K");
@@ -349,10 +459,6 @@ namespace UMS_IoT
         }
         #endregion
 
-        private void Main_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            Environment.Exit(0);
-        }
 
     }
 }
