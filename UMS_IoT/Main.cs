@@ -46,6 +46,8 @@ namespace UMS_IoT
                     SerialSend(IoT_Device_Port, "V");
                     Thread.Sleep(255000);
                 }
+                else
+                    Thread.Sleep(100);
             }
         }
 
@@ -376,7 +378,9 @@ namespace UMS_IoT
                 float u, l;
                 if (float.TryParse(Uplimit_textBox.Text, out u) && float.TryParse(Lowlimit_textBox.Text, out l))
                 {
-                    SerialSend(IoT_Device_Port, "UL" + u.ToString("##0.0#"));
+                    Uplimit_textBox.Text = u.ToString("##0.0#");
+                    Lowlimit_textBox.Text = l.ToString("##0.0#");
+                    SerialSend(IoT_Device_Port, "UL" + u.ToString("##0.0#"));                    
                     CheckUpdate_Up = true;
                     Thread.Sleep(50);
                     SerialSend(IoT_Device_Port, "DL" + l.ToString("##0.0#"));
@@ -385,7 +389,7 @@ namespace UMS_IoT
                     if(CheckLimitUpdate())
                         MessageBox.Show("設定完成");
                     else
-                        MessageBox.Show("設定失敗，請再試一次");
+                        MessageBox.Show("設定失敗，請確認設定值後再試一次");
                 }
                 else
                 {

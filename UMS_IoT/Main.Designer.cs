@@ -262,7 +262,7 @@ namespace UMS_IoT
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label1.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.label1.Location = new System.Drawing.Point(462, 16);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(131, 47);
@@ -283,7 +283,7 @@ namespace UMS_IoT
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label2.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.label2.Location = new System.Drawing.Point(624, 16);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(168, 47);
@@ -303,7 +303,7 @@ namespace UMS_IoT
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label3.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.label3.Location = new System.Drawing.Point(818, 16);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(168, 47);
@@ -400,7 +400,7 @@ namespace UMS_IoT
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label7.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.label7.Location = new System.Drawing.Point(1130, 16);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(168, 47);
@@ -444,7 +444,7 @@ namespace UMS_IoT
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox10);
             this.Name = "Main";
-            this.Text = "UMS Test";
+            this.Text = "UMS圓盤檢測系統";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
             this.Load += new System.EventHandler(this.Main_Load);
             this.groupBox10.ResumeLayout(false);
