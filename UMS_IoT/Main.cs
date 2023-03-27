@@ -564,14 +564,5 @@ namespace UMS_IoT
 
         #endregion
 
-        private void BT_stat_lb_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label7_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }
