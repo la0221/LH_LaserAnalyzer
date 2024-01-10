@@ -496,8 +496,11 @@ namespace UMS_Laser
 
         private void StartRead_button_Click(object sender, EventArgs e)
         {
-            SensorProcess_idx = -1;
-            SerialSend(LaserDevice_Port, "start");
+            if (SensorProcess_idx == -2 || SensorProcess_idx == 2)
+            {
+                SensorProcess_idx = -1;
+                SerialSend(LaserDevice_Port, "start");
+            }
         }
 
         private void StopRead_button_Click(object sender, EventArgs e)

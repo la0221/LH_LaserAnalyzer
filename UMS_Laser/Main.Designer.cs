@@ -138,11 +138,11 @@ namespace UMS_Laser
             this.groupBox1.Controls.Add(this.BuzzOn_button);
             this.groupBox1.Controls.Add(this.Read_button);
             this.groupBox1.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.groupBox1.Location = new System.Drawing.Point(1168, 153);
+            this.groupBox1.Location = new System.Drawing.Point(980, 30);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(5, 4, 5, 4);
-            this.groupBox1.Size = new System.Drawing.Size(253, 315);
+            this.groupBox1.Size = new System.Drawing.Size(170, 56);
             this.groupBox1.TabIndex = 49;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "DEBUG";
@@ -348,7 +348,7 @@ namespace UMS_Laser
             this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1436, 873);
+            this.ClientSize = new System.Drawing.Size(1173, 866);
             this.Controls.Add(this.StopRead_button);
             this.Controls.Add(this.BuzzOff_button);
             this.Controls.Add(this.groupBox1);
@@ -360,6 +360,8 @@ namespace UMS_Laser
             this.Controls.Add(this.exp2csv_btn);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox10);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.MaximizeBox = false;
             this.Name = "Main";
             this.Text = "UMS圓盤檢測系統";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
