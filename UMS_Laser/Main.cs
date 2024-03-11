@@ -37,7 +37,6 @@ namespace UMS_Laser
         private void mainProcess_Action() 
         { 
             mainProcess.SerialSend = (data) => { SerialSend(LaserDevice_Port, data); };
-
         }
 
         private void COM_Connect_btn_Click(object sender, EventArgs e)
@@ -116,7 +115,7 @@ namespace UMS_Laser
                         if (CheckUpdate_Up)
                         {
                             Debug.WriteLine("Check Update Up");
-                            Debug.WriteLine(float.Parse(rcv.Substring(rcv.IndexOf(":") + 1).Trim()).ToString("##0.0"));
+                            Debug.WriteLine(float.Parse(rcv.Substring(rcv.IndexOf(":") + 1).Trim()).ToString("##0.000"));
                             if (float.Parse(Uplimit_textBox.Text) == float.Parse(rcv.Substring(rcv.IndexOf(":") + 1).Trim()))
                             {                             
                                 UpdateCompleteUp = true;
@@ -124,7 +123,7 @@ namespace UMS_Laser
                             CheckUpdate_Up = false;
                         }
                         else
-                            Uplimit_textBox.Text = float.Parse(rcv.Substring(rcv.IndexOf(":") + 1).Trim()).ToString("##0.0");
+                            Uplimit_textBox.Text = float.Parse(rcv.Substring(rcv.IndexOf(":") + 1).Trim()).ToString("##0.000");
                     }   
 
                     else if(rcv.Contains("Lowlimit"))
@@ -132,7 +131,7 @@ namespace UMS_Laser
                         if(CheckUpdate_Low)
                         {
                             Debug.WriteLine("Check Update Low");
-                            Debug.WriteLine(float.Parse(rcv.Substring(rcv.IndexOf(":") + 1).Trim()).ToString("##0.0"));
+                            Debug.WriteLine(float.Parse(rcv.Substring(rcv.IndexOf(":") + 1).Trim()).ToString("##0.000")); 
                             if (float.Parse(Lowlimit_textBox.Text) == float.Parse(rcv.Substring(rcv.IndexOf(":") + 1).Trim()))
                             {
                                 UpdateCompleteLow = true;
@@ -140,7 +139,7 @@ namespace UMS_Laser
                             CheckUpdate_Low = false;
                         }
                         else
-                            Lowlimit_textBox.Text = float.Parse(rcv.Substring(rcv.IndexOf(":") + 1).Trim()).ToString("##0.0");
+                            Lowlimit_textBox.Text = float.Parse(rcv.Substring(rcv.IndexOf(":") + 1).Trim()).ToString("##0.000");
                     }
 
                     else if(rcv.Contains("TEST STOP"))
@@ -175,7 +174,7 @@ namespace UMS_Laser
                             SensorState = int.Parse(rcv.Split(',')[1]);
                             SensorProcess(rawdist);    // 判斷Sensor狀態及確認offset值
                             if (SensorProcess_idx != -2 && SensorProcess_idx != 2)
-                                rcv_textBox.AppendText(DateTime.Now.ToString("MM-dd hh:mm:ss.fff") + ", " + $"{rawdist.ToString("##0.0")}, {SensorState}\r\n");
+                                rcv_textBox.AppendText(DateTime.Now.ToString("MM-dd hh:mm:ss.fff") + ", " + $"{rawdist.ToString("##0.000")}, {SensorState}\r\n");
                         }
                         catch
                         {
@@ -355,12 +354,12 @@ namespace UMS_Laser
                 float u, l;
                 if (float.TryParse(Uplimit_textBox.Text, out u) && float.TryParse(Lowlimit_textBox.Text, out l))
                 {
-                    Uplimit_textBox.Text = u.ToString("##0.0");
-                    Lowlimit_textBox.Text = l.ToString("##0.0");
-                    SerialSend(LaserDevice_Port, "uplimit " + u.ToString("##0.0"));
+                    Uplimit_textBox.Text = u.ToString("##0.000");
+                    Lowlimit_textBox.Text = l.ToString("##0.000");
+                    SerialSend(LaserDevice_Port, "uplimit " + u.ToString("##0.000"));
                     CheckUpdate_Up = true;
                     Thread.Sleep(200);
-                    SerialSend(LaserDevice_Port, "lowlimit " + l.ToString("##0.0"));
+                    SerialSend(LaserDevice_Port, "lowlimit " + l.ToString("##0.000"));
                     CheckUpdate_Low = true;
 
                     if(CheckLimitUpdate())
