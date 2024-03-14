@@ -36,7 +36,7 @@ namespace UMS_Laser
             this.exp2csv_btn = new System.Windows.Forms.Button();
             this.clear_tb_btn = new System.Windows.Forms.Button();
             this.rcv_tb = new System.Windows.Forms.TextBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.debug_gb = new System.Windows.Forms.GroupBox();
             this.GetSensor_button = new System.Windows.Forms.Button();
             this.BuzzOn_button = new System.Windows.Forms.Button();
             this.Read_button = new System.Windows.Forms.Button();
@@ -63,8 +63,9 @@ namespace UMS_Laser
             this.label2 = new System.Windows.Forms.Label();
             this.StartPlace_tb = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.DebugResult_btn = new System.Windows.Forms.Button();
             this.groupBox10.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.debug_gb.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.SuspendLayout();
@@ -144,21 +145,22 @@ namespace UMS_Laser
             this.rcv_tb.TabIndex = 51;
             this.rcv_tb.Text = resources.GetString("rcv_tb.Text");
             // 
-            // groupBox1
+            // debug_gb
             // 
-            this.groupBox1.Controls.Add(this.GetSensor_button);
-            this.groupBox1.Controls.Add(this.BuzzOn_button);
-            this.groupBox1.Controls.Add(this.Read_button);
-            this.groupBox1.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.groupBox1.Location = new System.Drawing.Point(980, 30);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(5, 4, 5, 4);
-            this.groupBox1.Size = new System.Drawing.Size(170, 56);
-            this.groupBox1.TabIndex = 49;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "DEBUG";
-            this.groupBox1.Visible = false;
+            this.debug_gb.Controls.Add(this.DebugResult_btn);
+            this.debug_gb.Controls.Add(this.GetSensor_button);
+            this.debug_gb.Controls.Add(this.BuzzOn_button);
+            this.debug_gb.Controls.Add(this.Read_button);
+            this.debug_gb.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.debug_gb.Location = new System.Drawing.Point(1174, 397);
+            this.debug_gb.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
+            this.debug_gb.Name = "debug_gb";
+            this.debug_gb.Padding = new System.Windows.Forms.Padding(5, 4, 5, 4);
+            this.debug_gb.Size = new System.Drawing.Size(244, 378);
+            this.debug_gb.TabIndex = 49;
+            this.debug_gb.TabStop = false;
+            this.debug_gb.Text = "DEBUG";
+            this.debug_gb.Visible = false;
             // 
             // GetSensor_button
             // 
@@ -366,7 +368,7 @@ namespace UMS_Laser
             this.groupBox4.Controls.Add(this.label11);
             this.groupBox4.Controls.Add(this.Department_tb);
             this.groupBox4.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.groupBox4.Location = new System.Drawing.Point(1184, 153);
+            this.groupBox4.Location = new System.Drawing.Point(1168, 13);
             this.groupBox4.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Padding = new System.Windows.Forms.Padding(5, 4, 5, 4);
@@ -443,6 +445,16 @@ namespace UMS_Laser
             this.label3.Text = "量測起點：";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // DebugResult_btn
+            // 
+            this.DebugResult_btn.Location = new System.Drawing.Point(21, 294);
+            this.DebugResult_btn.Name = "DebugResult_btn";
+            this.DebugResult_btn.Size = new System.Drawing.Size(210, 60);
+            this.DebugResult_btn.TabIndex = 53;
+            this.DebugResult_btn.Text = "量測結果";
+            this.DebugResult_btn.UseVisualStyleBackColor = true;
+            this.DebugResult_btn.Click += new System.EventHandler(this.DebugResult_btn_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 24F);
@@ -451,7 +463,7 @@ namespace UMS_Laser
             this.ClientSize = new System.Drawing.Size(2085, 866);
             this.Controls.Add(this.StopRead_button);
             this.Controls.Add(this.BuzzOff_button);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.debug_gb);
             this.Controls.Add(this.TestState_lb);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.rcv_tb);
@@ -468,8 +480,8 @@ namespace UMS_Laser
             this.Load += new System.EventHandler(this.Main_Load);
             this.groupBox10.ResumeLayout(false);
             this.groupBox10.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.debug_gb.ResumeLayout(false);
+            this.debug_gb.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox4.ResumeLayout(false);
@@ -486,7 +498,7 @@ namespace UMS_Laser
         private System.Windows.Forms.Button exp2csv_btn;
         private System.Windows.Forms.Button clear_tb_btn;
         private System.Windows.Forms.TextBox rcv_tb;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox debug_gb;
         private System.Windows.Forms.Button StopRead_button;
         private System.Windows.Forms.Button BuzzOff_button;
         private System.Windows.Forms.Button BuzzOn_button;
@@ -513,6 +525,7 @@ namespace UMS_Laser
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox LicensePlate_tb;
         private System.Windows.Forms.TextBox ProjectNo_tb;
+        private System.Windows.Forms.Button DebugResult_btn;
     }
 }
 

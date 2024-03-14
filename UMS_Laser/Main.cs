@@ -40,6 +40,8 @@ namespace UMS_Laser
             InitializeComponent();  
             GetComPort();
             mainProcess_Action();
+
+            debug_gb.Visible = true;
         }
 
         private void mainProcess_Action() 
@@ -543,5 +545,12 @@ namespace UMS_Laser
             SerialSend(LaserDevice_Port, "alarm 0");
         }
         #endregion
+
+        private void DebugResult_btn_Click(object sender, EventArgs e)
+        {
+            Form result = new Result(Department_tb.Text, LicensePlate_tb.Text, ProjectNo_tb.Text, StartPlace_tb.Text, "2.00", "0.50", rcv_tb.Text);
+            result.Show();
+            return;
+        }
     }
 }
