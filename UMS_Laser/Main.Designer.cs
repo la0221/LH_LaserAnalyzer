@@ -29,12 +29,13 @@ namespace UMS_Laser
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.COM_cb = new System.Windows.Forms.ComboBox();
             this.COM_Connect_btn = new System.Windows.Forms.Button();
             this.exp2csv_btn = new System.Windows.Forms.Button();
             this.clear_tb_btn = new System.Windows.Forms.Button();
-            this.rcv_textBox = new System.Windows.Forms.TextBox();
+            this.rcv_tb = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.GetSensor_button = new System.Windows.Forms.Button();
             this.BuzzOn_button = new System.Windows.Forms.Button();
@@ -45,17 +46,27 @@ namespace UMS_Laser
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.Lowlimit_textBox = new System.Windows.Forms.TextBox();
+            this.Downlimit_tb = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.SetLimit_button = new System.Windows.Forms.Button();
-            this.Uplimit_textBox = new System.Windows.Forms.TextBox();
+            this.Uplimit_tb = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.TestState_lb = new System.Windows.Forms.Label();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.Department_tb = new System.Windows.Forms.TextBox();
+            this.LicensePlate_tb = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.ProjectNo_tb = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.StartPlace_tb = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.groupBox10.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox10
@@ -120,17 +131,18 @@ namespace UMS_Laser
             this.clear_tb_btn.UseVisualStyleBackColor = true;
             this.clear_tb_btn.Click += new System.EventHandler(this.clear_tb_btn_Click);
             // 
-            // rcv_textBox
+            // rcv_tb
             // 
-            this.rcv_textBox.BackColor = System.Drawing.SystemColors.Window;
-            this.rcv_textBox.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.rcv_textBox.Location = new System.Drawing.Point(529, 153);
-            this.rcv_textBox.Multiline = true;
-            this.rcv_textBox.Name = "rcv_textBox";
-            this.rcv_textBox.ReadOnly = true;
-            this.rcv_textBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.rcv_textBox.Size = new System.Drawing.Size(631, 700);
-            this.rcv_textBox.TabIndex = 51;
+            this.rcv_tb.BackColor = System.Drawing.SystemColors.Window;
+            this.rcv_tb.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.rcv_tb.Location = new System.Drawing.Point(529, 153);
+            this.rcv_tb.Multiline = true;
+            this.rcv_tb.Name = "rcv_tb";
+            this.rcv_tb.ReadOnly = true;
+            this.rcv_tb.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.rcv_tb.Size = new System.Drawing.Size(631, 700);
+            this.rcv_tb.TabIndex = 51;
+            this.rcv_tb.Text = resources.GetString("rcv_tb.Text");
             // 
             // groupBox1
             // 
@@ -230,12 +242,12 @@ namespace UMS_Laser
             // 
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.label5);
-            this.groupBox2.Controls.Add(this.Lowlimit_textBox);
+            this.groupBox2.Controls.Add(this.Downlimit_tb);
             this.groupBox2.Controls.Add(this.label9);
             this.groupBox2.Controls.Add(this.label8);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.SetLimit_button);
-            this.groupBox2.Controls.Add(this.Uplimit_textBox);
+            this.groupBox2.Controls.Add(this.Uplimit_tb);
             this.groupBox2.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.groupBox2.Location = new System.Drawing.Point(14, 552);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
@@ -254,7 +266,7 @@ namespace UMS_Laser
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(340, 47);
             this.label6.TabIndex = 52;
-            this.label6.Text = "(取至小數點後一位)";
+            this.label6.Text = "(取至小數點後兩位)";
             // 
             // label5
             // 
@@ -266,12 +278,12 @@ namespace UMS_Laser
             this.label5.TabIndex = 52;
             this.label5.Text = "下限";
             // 
-            // Lowlimit_textBox
+            // Downlimit_tb
             // 
-            this.Lowlimit_textBox.Location = new System.Drawing.Point(118, 161);
-            this.Lowlimit_textBox.Name = "Lowlimit_textBox";
-            this.Lowlimit_textBox.Size = new System.Drawing.Size(149, 57);
-            this.Lowlimit_textBox.TabIndex = 53;
+            this.Downlimit_tb.Location = new System.Drawing.Point(118, 161);
+            this.Downlimit_tb.Name = "Downlimit_tb";
+            this.Downlimit_tb.Size = new System.Drawing.Size(149, 57);
+            this.Downlimit_tb.TabIndex = 53;
             // 
             // label9
             // 
@@ -316,12 +328,12 @@ namespace UMS_Laser
             this.SetLimit_button.UseVisualStyleBackColor = true;
             this.SetLimit_button.Click += new System.EventHandler(this.SetLimit_button_Click);
             // 
-            // Uplimit_textBox
+            // Uplimit_tb
             // 
-            this.Uplimit_textBox.Location = new System.Drawing.Point(118, 81);
-            this.Uplimit_textBox.Name = "Uplimit_textBox";
-            this.Uplimit_textBox.Size = new System.Drawing.Size(149, 57);
-            this.Uplimit_textBox.TabIndex = 53;
+            this.Uplimit_tb.Location = new System.Drawing.Point(118, 81);
+            this.Uplimit_tb.Name = "Uplimit_tb";
+            this.Uplimit_tb.Size = new System.Drawing.Size(149, 57);
+            this.Uplimit_tb.TabIndex = 53;
             // 
             // label7
             // 
@@ -343,27 +355,115 @@ namespace UMS_Laser
             this.TestState_lb.Text = "未開始";
             this.TestState_lb.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.label3);
+            this.groupBox4.Controls.Add(this.label1);
+            this.groupBox4.Controls.Add(this.StartPlace_tb);
+            this.groupBox4.Controls.Add(this.label2);
+            this.groupBox4.Controls.Add(this.LicensePlate_tb);
+            this.groupBox4.Controls.Add(this.ProjectNo_tb);
+            this.groupBox4.Controls.Add(this.label11);
+            this.groupBox4.Controls.Add(this.Department_tb);
+            this.groupBox4.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.groupBox4.Location = new System.Drawing.Point(1184, 153);
+            this.groupBox4.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Padding = new System.Windows.Forms.Padding(5, 4, 5, 4);
+            this.groupBox4.Size = new System.Drawing.Size(674, 376);
+            this.groupBox4.TabIndex = 49;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "報表設定";
+            // 
+            // label11
+            // 
+            this.label11.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label11.Location = new System.Drawing.Point(8, 84);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(242, 47);
+            this.label11.TabIndex = 52;
+            this.label11.Text = "單位：";
+            this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // Department_tb
+            // 
+            this.Department_tb.Location = new System.Drawing.Point(256, 81);
+            this.Department_tb.Name = "Department_tb";
+            this.Department_tb.Size = new System.Drawing.Size(392, 57);
+            this.Department_tb.TabIndex = 53;
+            // 
+            // LicensePlate_tb
+            // 
+            this.LicensePlate_tb.Location = new System.Drawing.Point(256, 154);
+            this.LicensePlate_tb.Name = "LicensePlate_tb";
+            this.LicensePlate_tb.Size = new System.Drawing.Size(392, 57);
+            this.LicensePlate_tb.TabIndex = 53;
+            // 
+            // label1
+            // 
+            this.label1.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label1.Location = new System.Drawing.Point(8, 157);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(242, 47);
+            this.label1.TabIndex = 52;
+            this.label1.Text = "車號：";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // ProjectNo_tb
+            // 
+            this.ProjectNo_tb.Location = new System.Drawing.Point(256, 229);
+            this.ProjectNo_tb.Name = "ProjectNo_tb";
+            this.ProjectNo_tb.Size = new System.Drawing.Size(392, 57);
+            this.ProjectNo_tb.TabIndex = 53;
+            // 
+            // label2
+            // 
+            this.label2.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label2.Location = new System.Drawing.Point(8, 232);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(242, 47);
+            this.label2.TabIndex = 52;
+            this.label2.Text = "工程文號：";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // StartPlace_tb
+            // 
+            this.StartPlace_tb.Location = new System.Drawing.Point(256, 302);
+            this.StartPlace_tb.Name = "StartPlace_tb";
+            this.StartPlace_tb.Size = new System.Drawing.Size(392, 57);
+            this.StartPlace_tb.TabIndex = 53;
+            // 
+            // label3
+            // 
+            this.label3.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label3.Location = new System.Drawing.Point(8, 305);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(242, 47);
+            this.label3.TabIndex = 52;
+            this.label3.Text = "量測起點：";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1173, 866);
+            this.ClientSize = new System.Drawing.Size(2085, 866);
             this.Controls.Add(this.StopRead_button);
             this.Controls.Add(this.BuzzOff_button);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.TestState_lb);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.rcv_textBox);
+            this.Controls.Add(this.rcv_tb);
             this.Controls.Add(this.StartRead_button);
             this.Controls.Add(this.clear_tb_btn);
             this.Controls.Add(this.exp2csv_btn);
+            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox10);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.MaximizeBox = false;
             this.Name = "Main";
-            this.Text = "UMS圓盤檢測系統";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
             this.Load += new System.EventHandler(this.Main_Load);
             this.groupBox10.ResumeLayout(false);
@@ -372,6 +472,8 @@ namespace UMS_Laser
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -383,7 +485,7 @@ namespace UMS_Laser
         private System.Windows.Forms.Button COM_Connect_btn;
         private System.Windows.Forms.Button exp2csv_btn;
         private System.Windows.Forms.Button clear_tb_btn;
-        private System.Windows.Forms.TextBox rcv_textBox;
+        private System.Windows.Forms.TextBox rcv_tb;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button StopRead_button;
         private System.Windows.Forms.Button BuzzOff_button;
@@ -395,13 +497,22 @@ namespace UMS_Laser
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button SetLimit_button;
-        private System.Windows.Forms.TextBox Lowlimit_textBox;
-        private System.Windows.Forms.TextBox Uplimit_textBox;
+        private System.Windows.Forms.TextBox Downlimit_tb;
+        private System.Windows.Forms.TextBox Uplimit_tb;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label TestState_lb;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TextBox Department_tb;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox StartPlace_tb;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox LicensePlate_tb;
+        private System.Windows.Forms.TextBox ProjectNo_tb;
     }
 }
 

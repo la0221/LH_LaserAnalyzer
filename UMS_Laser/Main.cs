@@ -11,6 +11,14 @@ using System.IO.Ports;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Diagnostics;
 
+#region Design
+// 1. 量測結束後自動彈出「測試報告」視窗
+// 2. 上下限值儲存在設備中，開啟程式時自動讀取
+// 3. 可單獨匯入CSV產出報表
+// 4. 第一頁面直接輸入數據，測試報告不開放修改
+// 5. 量測結束自動匯出CSV並產生報表
+#endregion
+
 namespace UMS_Laser
 {
     public partial class Main : Form
@@ -41,6 +49,13 @@ namespace UMS_Laser
 
         private void COM_Connect_btn_Click(object sender, EventArgs e)
         {
+            if(COM_cb.Text == "Result")
+            {
+                Form result = new Result(Department_tb.Text, LicensePlate_tb.Text, ProjectNo_tb.Text, StartPlace_tb.Text, Uplimit_tb.Text, Downlimit_tb.Text, rcv_tb.Text);
+                result.Show();
+                return;
+            }
+
             if (LaserDevice_Port.IsOpen)
             {
                 try
@@ -115,15 +130,15 @@ namespace UMS_Laser
                         if (CheckUpdate_Up)
                         {
                             Debug.WriteLine("Check Update Up");
-                            Debug.WriteLine(float.Parse(rcv.Substring(rcv.IndexOf(":") + 1).Trim()).ToString("##0.000"));
-                            if (float.Parse(Uplimit_textBox.Text) == float.Parse(rcv.Substring(rcv.IndexOf(":") + 1).Trim()))
+                            Debug.WriteLine(float.Parse(rcv.Substring(rcv.IndexOf(":") + 1).Trim()).ToString("##0.00"));
+                            if (float.Parse(Uplimit_tb.Text) == float.Parse(rcv.Substring(rcv.IndexOf(":") + 1).Trim()))
                             {                             
                                 UpdateCompleteUp = true;
                             }
                             CheckUpdate_Up = false;
                         }
                         else
-                            Uplimit_textBox.Text = float.Parse(rcv.Substring(rcv.IndexOf(":") + 1).Trim()).ToString("##0.000");
+                            Uplimit_tb.Text = float.Parse(rcv.Substring(rcv.IndexOf(":") + 1).Trim()).ToString("##0.00");
                     }   
 
                     else if(rcv.Contains("Lowlimit"))
@@ -131,15 +146,15 @@ namespace UMS_Laser
                         if(CheckUpdate_Low)
                         {
                             Debug.WriteLine("Check Update Low");
-                            Debug.WriteLine(float.Parse(rcv.Substring(rcv.IndexOf(":") + 1).Trim()).ToString("##0.000")); 
-                            if (float.Parse(Lowlimit_textBox.Text) == float.Parse(rcv.Substring(rcv.IndexOf(":") + 1).Trim()))
+                            Debug.WriteLine(float.Parse(rcv.Substring(rcv.IndexOf(":") + 1).Trim()).ToString("##0.00")); 
+                            if (float.Parse(Downlimit_tb.Text) == float.Parse(rcv.Substring(rcv.IndexOf(":") + 1).Trim()))
                             {
                                 UpdateCompleteLow = true;
                             }
                             CheckUpdate_Low = false;
                         }
                         else
-                            Lowlimit_textBox.Text = float.Parse(rcv.Substring(rcv.IndexOf(":") + 1).Trim()).ToString("##0.000");
+                            Downlimit_tb.Text = float.Parse(rcv.Substring(rcv.IndexOf(":") + 1).Trim()).ToString("##0.00");
                     }
 
                     else if(rcv.Contains("TEST STOP"))
@@ -174,7 +189,7 @@ namespace UMS_Laser
                             SensorState = int.Parse(rcv.Split(',')[1]);
                             SensorProcess(rawdist);    // 判斷Sensor狀態及確認offset值
                             if (SensorProcess_idx != -2 && SensorProcess_idx != 2)
-                                rcv_textBox.AppendText(DateTime.Now.ToString("MM-dd hh:mm:ss.fff") + ", " + $"{rawdist.ToString("##0.000")}, {SensorState}\r\n");
+                                rcv_tb.AppendText(DateTime.Now.ToString("MM-dd hh:mm:ss.fff") + $", {rawdist.ToString("##0.00")}, {SensorState}\r\n");
                         }
                         catch
                         {
@@ -254,12 +269,12 @@ namespace UMS_Laser
                 {
                     case 1:
                         //Debug.WriteLine("txt"); 
-                        streamWriter.Write(rcv_textBox.Text);
+                        streamWriter.Write(rcv_tb.Text);
                         break;
 
                     case 2:
                         //Debug.WriteLine("csv");
-                        streamWriter.Write(rcv_textBox.Text);
+                        streamWriter.Write(rcv_tb.Text);
                         break;
                 }
                 streamWriter.Close();
@@ -343,7 +358,7 @@ namespace UMS_Laser
 
         private void clear_tb_btn_Click(object sender, EventArgs e)
         {
-            rcv_textBox.Clear();
+            rcv_tb.Clear();
         }
 
         private void SetLimit_button_Click(object sender, EventArgs e)
@@ -352,14 +367,14 @@ namespace UMS_Laser
             delegate ()
             {
                 float u, l;
-                if (float.TryParse(Uplimit_textBox.Text, out u) && float.TryParse(Lowlimit_textBox.Text, out l))
+                if (float.TryParse(Uplimit_tb.Text, out u) && float.TryParse(Downlimit_tb.Text, out l))
                 {
-                    Uplimit_textBox.Text = u.ToString("##0.000");
-                    Lowlimit_textBox.Text = l.ToString("##0.000");
-                    SerialSend(LaserDevice_Port, "uplimit " + u.ToString("##0.000"));
+                    Uplimit_tb.Text = u.ToString("##0.00");
+                    Downlimit_tb.Text = l.ToString("##0.00");
+                    SerialSend(LaserDevice_Port, "uplimit " + u.ToString("##0.00"));
                     CheckUpdate_Up = true;
                     Thread.Sleep(200);
-                    SerialSend(LaserDevice_Port, "lowlimit " + l.ToString("##0.000"));
+                    SerialSend(LaserDevice_Port, "lowlimit " + l.ToString("##0.00"));
                     CheckUpdate_Low = true;
 
                     if(CheckLimitUpdate())
@@ -401,8 +416,8 @@ namespace UMS_Laser
         private void State_init()
         {
             TestState_lb.Text = "未開始";
-            Uplimit_textBox.Text = string.Empty;
-            Lowlimit_textBox.Text = string.Empty;
+            Uplimit_tb.Text = string.Empty;
+            Downlimit_tb.Text = string.Empty;
         }
 
         private void Main_Load(object sender, EventArgs e)
