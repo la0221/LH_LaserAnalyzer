@@ -37,6 +37,7 @@ namespace UMS_Laser
             this.clear_tb_btn = new System.Windows.Forms.Button();
             this.rcv_tb = new System.Windows.Forms.TextBox();
             this.debug_gb = new System.Windows.Forms.GroupBox();
+            this.DebugResult_btn = new System.Windows.Forms.Button();
             this.GetSensor_button = new System.Windows.Forms.Button();
             this.BuzzOn_button = new System.Windows.Forms.Button();
             this.Read_button = new System.Windows.Forms.Button();
@@ -55,15 +56,15 @@ namespace UMS_Laser
             this.label7 = new System.Windows.Forms.Label();
             this.TestState_lb = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.StartPlace_tb = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.LicensePlate_tb = new System.Windows.Forms.TextBox();
+            this.ProjectNo_tb = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.Department_tb = new System.Windows.Forms.TextBox();
-            this.LicensePlate_tb = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.ProjectNo_tb = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.StartPlace_tb = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.DebugResult_btn = new System.Windows.Forms.Button();
+            this.ImportCSV_btn = new System.Windows.Forms.Button();
             this.groupBox10.SuspendLayout();
             this.debug_gb.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -111,10 +112,10 @@ namespace UMS_Laser
             // exp2csv_btn
             // 
             this.exp2csv_btn.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.exp2csv_btn.Location = new System.Drawing.Point(14, 390);
+            this.exp2csv_btn.Location = new System.Drawing.Point(1335, 390);
             this.exp2csv_btn.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.exp2csv_btn.Name = "exp2csv_btn";
-            this.exp2csv_btn.Size = new System.Drawing.Size(507, 71);
+            this.exp2csv_btn.Size = new System.Drawing.Size(411, 71);
             this.exp2csv_btn.TabIndex = 5;
             this.exp2csv_btn.Text = "匯出檔案";
             this.exp2csv_btn.UseVisualStyleBackColor = true;
@@ -123,10 +124,10 @@ namespace UMS_Laser
             // clear_tb_btn
             // 
             this.clear_tb_btn.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.clear_tb_btn.Location = new System.Drawing.Point(14, 469);
+            this.clear_tb_btn.Location = new System.Drawing.Point(1335, 469);
             this.clear_tb_btn.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.clear_tb_btn.Name = "clear_tb_btn";
-            this.clear_tb_btn.Size = new System.Drawing.Size(507, 71);
+            this.clear_tb_btn.Size = new System.Drawing.Size(411, 71);
             this.clear_tb_btn.TabIndex = 50;
             this.clear_tb_btn.Text = "清除接收視窗";
             this.clear_tb_btn.UseVisualStyleBackColor = true;
@@ -136,7 +137,7 @@ namespace UMS_Laser
             // 
             this.rcv_tb.BackColor = System.Drawing.SystemColors.Window;
             this.rcv_tb.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.rcv_tb.Location = new System.Drawing.Point(529, 153);
+            this.rcv_tb.Location = new System.Drawing.Point(696, 153);
             this.rcv_tb.Multiline = true;
             this.rcv_tb.Name = "rcv_tb";
             this.rcv_tb.ReadOnly = true;
@@ -152,15 +153,25 @@ namespace UMS_Laser
             this.debug_gb.Controls.Add(this.BuzzOn_button);
             this.debug_gb.Controls.Add(this.Read_button);
             this.debug_gb.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.debug_gb.Location = new System.Drawing.Point(1174, 397);
+            this.debug_gb.Location = new System.Drawing.Point(1783, 123);
             this.debug_gb.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.debug_gb.Name = "debug_gb";
             this.debug_gb.Padding = new System.Windows.Forms.Padding(5, 4, 5, 4);
-            this.debug_gb.Size = new System.Drawing.Size(244, 378);
+            this.debug_gb.Size = new System.Drawing.Size(244, 365);
             this.debug_gb.TabIndex = 49;
             this.debug_gb.TabStop = false;
             this.debug_gb.Text = "DEBUG";
             this.debug_gb.Visible = false;
+            // 
+            // DebugResult_btn
+            // 
+            this.DebugResult_btn.Location = new System.Drawing.Point(21, 294);
+            this.DebugResult_btn.Name = "DebugResult_btn";
+            this.DebugResult_btn.Size = new System.Drawing.Size(210, 60);
+            this.DebugResult_btn.TabIndex = 53;
+            this.DebugResult_btn.Text = "量測結果";
+            this.DebugResult_btn.UseVisualStyleBackColor = true;
+            this.DebugResult_btn.Click += new System.EventHandler(this.DebugResult_btn_Click);
             // 
             // GetSensor_button
             // 
@@ -205,10 +216,10 @@ namespace UMS_Laser
             // 
             this.StopRead_button.AutoSize = true;
             this.StopRead_button.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.StopRead_button.Location = new System.Drawing.Point(14, 232);
+            this.StopRead_button.Location = new System.Drawing.Point(1335, 232);
             this.StopRead_button.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.StopRead_button.Name = "StopRead_button";
-            this.StopRead_button.Size = new System.Drawing.Size(508, 71);
+            this.StopRead_button.Size = new System.Drawing.Size(412, 71);
             this.StopRead_button.TabIndex = 4;
             this.StopRead_button.Text = "停止量測";
             this.StopRead_button.UseVisualStyleBackColor = true;
@@ -218,10 +229,10 @@ namespace UMS_Laser
             // 
             this.BuzzOff_button.AutoSize = true;
             this.BuzzOff_button.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.BuzzOff_button.Location = new System.Drawing.Point(14, 311);
+            this.BuzzOff_button.Location = new System.Drawing.Point(1335, 311);
             this.BuzzOff_button.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.BuzzOff_button.Name = "BuzzOff_button";
-            this.BuzzOff_button.Size = new System.Drawing.Size(507, 71);
+            this.BuzzOff_button.Size = new System.Drawing.Size(411, 71);
             this.BuzzOff_button.TabIndex = 4;
             this.BuzzOff_button.Text = "關閉警示";
             this.BuzzOff_button.UseVisualStyleBackColor = true;
@@ -231,10 +242,10 @@ namespace UMS_Laser
             // 
             this.StartRead_button.AutoSize = true;
             this.StartRead_button.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.StartRead_button.Location = new System.Drawing.Point(14, 153);
+            this.StartRead_button.Location = new System.Drawing.Point(1335, 153);
             this.StartRead_button.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.StartRead_button.Name = "StartRead_button";
-            this.StartRead_button.Size = new System.Drawing.Size(507, 71);
+            this.StartRead_button.Size = new System.Drawing.Size(411, 71);
             this.StartRead_button.TabIndex = 4;
             this.StartRead_button.Text = "開始量測";
             this.StartRead_button.UseVisualStyleBackColor = true;
@@ -340,7 +351,7 @@ namespace UMS_Laser
             // label7
             // 
             this.label7.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label7.Location = new System.Drawing.Point(529, 39);
+            this.label7.Location = new System.Drawing.Point(696, 39);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(631, 47);
             this.label7.TabIndex = 52;
@@ -350,7 +361,7 @@ namespace UMS_Laser
             // TestState_lb
             // 
             this.TestState_lb.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.TestState_lb.Location = new System.Drawing.Point(529, 98);
+            this.TestState_lb.Location = new System.Drawing.Point(696, 98);
             this.TestState_lb.Name = "TestState_lb";
             this.TestState_lb.Size = new System.Drawing.Size(631, 47);
             this.TestState_lb.TabIndex = 52;
@@ -368,7 +379,7 @@ namespace UMS_Laser
             this.groupBox4.Controls.Add(this.label11);
             this.groupBox4.Controls.Add(this.Department_tb);
             this.groupBox4.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.groupBox4.Location = new System.Drawing.Point(1168, 13);
+            this.groupBox4.Location = new System.Drawing.Point(14, 153);
             this.groupBox4.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Padding = new System.Windows.Forms.Padding(5, 4, 5, 4);
@@ -376,6 +387,57 @@ namespace UMS_Laser
             this.groupBox4.TabIndex = 49;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "報表設定";
+            // 
+            // label3
+            // 
+            this.label3.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label3.Location = new System.Drawing.Point(8, 305);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(242, 47);
+            this.label3.TabIndex = 52;
+            this.label3.Text = "量測起點：";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label1
+            // 
+            this.label1.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label1.Location = new System.Drawing.Point(8, 157);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(242, 47);
+            this.label1.TabIndex = 52;
+            this.label1.Text = "車號：";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // StartPlace_tb
+            // 
+            this.StartPlace_tb.Location = new System.Drawing.Point(261, 302);
+            this.StartPlace_tb.Name = "StartPlace_tb";
+            this.StartPlace_tb.Size = new System.Drawing.Size(392, 57);
+            this.StartPlace_tb.TabIndex = 53;
+            // 
+            // label2
+            // 
+            this.label2.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label2.Location = new System.Drawing.Point(8, 232);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(242, 47);
+            this.label2.TabIndex = 52;
+            this.label2.Text = "工程文號：";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LicensePlate_tb
+            // 
+            this.LicensePlate_tb.Location = new System.Drawing.Point(261, 154);
+            this.LicensePlate_tb.Name = "LicensePlate_tb";
+            this.LicensePlate_tb.Size = new System.Drawing.Size(392, 57);
+            this.LicensePlate_tb.TabIndex = 53;
+            // 
+            // ProjectNo_tb
+            // 
+            this.ProjectNo_tb.Location = new System.Drawing.Point(261, 229);
+            this.ProjectNo_tb.Name = "ProjectNo_tb";
+            this.ProjectNo_tb.Size = new System.Drawing.Size(392, 57);
+            this.ProjectNo_tb.TabIndex = 53;
             // 
             // label11
             // 
@@ -389,71 +451,22 @@ namespace UMS_Laser
             // 
             // Department_tb
             // 
-            this.Department_tb.Location = new System.Drawing.Point(256, 81);
+            this.Department_tb.Location = new System.Drawing.Point(261, 81);
             this.Department_tb.Name = "Department_tb";
             this.Department_tb.Size = new System.Drawing.Size(392, 57);
             this.Department_tb.TabIndex = 53;
             // 
-            // LicensePlate_tb
+            // ImportCSV_btn
             // 
-            this.LicensePlate_tb.Location = new System.Drawing.Point(256, 154);
-            this.LicensePlate_tb.Name = "LicensePlate_tb";
-            this.LicensePlate_tb.Size = new System.Drawing.Size(392, 57);
-            this.LicensePlate_tb.TabIndex = 53;
-            // 
-            // label1
-            // 
-            this.label1.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label1.Location = new System.Drawing.Point(8, 157);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(242, 47);
-            this.label1.TabIndex = 52;
-            this.label1.Text = "車號：";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // ProjectNo_tb
-            // 
-            this.ProjectNo_tb.Location = new System.Drawing.Point(256, 229);
-            this.ProjectNo_tb.Name = "ProjectNo_tb";
-            this.ProjectNo_tb.Size = new System.Drawing.Size(392, 57);
-            this.ProjectNo_tb.TabIndex = 53;
-            // 
-            // label2
-            // 
-            this.label2.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label2.Location = new System.Drawing.Point(8, 232);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(242, 47);
-            this.label2.TabIndex = 52;
-            this.label2.Text = "工程文號：";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // StartPlace_tb
-            // 
-            this.StartPlace_tb.Location = new System.Drawing.Point(256, 302);
-            this.StartPlace_tb.Name = "StartPlace_tb";
-            this.StartPlace_tb.Size = new System.Drawing.Size(392, 57);
-            this.StartPlace_tb.TabIndex = 53;
-            // 
-            // label3
-            // 
-            this.label3.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label3.Location = new System.Drawing.Point(8, 305);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(242, 47);
-            this.label3.TabIndex = 52;
-            this.label3.Text = "量測起點：";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // DebugResult_btn
-            // 
-            this.DebugResult_btn.Location = new System.Drawing.Point(21, 294);
-            this.DebugResult_btn.Name = "DebugResult_btn";
-            this.DebugResult_btn.Size = new System.Drawing.Size(210, 60);
-            this.DebugResult_btn.TabIndex = 53;
-            this.DebugResult_btn.Text = "量測結果";
-            this.DebugResult_btn.UseVisualStyleBackColor = true;
-            this.DebugResult_btn.Click += new System.EventHandler(this.DebugResult_btn_Click);
+            this.ImportCSV_btn.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.ImportCSV_btn.Location = new System.Drawing.Point(1336, 548);
+            this.ImportCSV_btn.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
+            this.ImportCSV_btn.Name = "ImportCSV_btn";
+            this.ImportCSV_btn.Size = new System.Drawing.Size(411, 71);
+            this.ImportCSV_btn.TabIndex = 50;
+            this.ImportCSV_btn.Text = "匯入檔案";
+            this.ImportCSV_btn.UseVisualStyleBackColor = true;
+            this.ImportCSV_btn.Click += new System.EventHandler(this.clear_tb_btn_Click);
             // 
             // Main
             // 
@@ -468,6 +481,7 @@ namespace UMS_Laser
             this.Controls.Add(this.label7);
             this.Controls.Add(this.rcv_tb);
             this.Controls.Add(this.StartRead_button);
+            this.Controls.Add(this.ImportCSV_btn);
             this.Controls.Add(this.clear_tb_btn);
             this.Controls.Add(this.exp2csv_btn);
             this.Controls.Add(this.groupBox4);
@@ -526,6 +540,7 @@ namespace UMS_Laser
         private System.Windows.Forms.TextBox LicensePlate_tb;
         private System.Windows.Forms.TextBox ProjectNo_tb;
         private System.Windows.Forms.Button DebugResult_btn;
+        private System.Windows.Forms.Button ImportCSV_btn;
     }
 }
 

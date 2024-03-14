@@ -16,6 +16,11 @@ using System.Runtime.InteropServices;
 using static UMS_Laser.Result;
 using System.Drawing.Imaging;
 using System.Threading;
+using iTextSharp;
+using iTextSharp.text.pdf;
+using iTextSharp.text;
+using System.IO;
+using System.Xml.Linq;
 
 namespace UMS_Laser
 {
@@ -68,7 +73,7 @@ namespace UMS_Laser
             Result_dgv.AutoResizeRows();
             Result_dgv.AutoResizeColumns();
 
-            //DemoChart(1, DT1, S1_value);
+            GetFormImageWithoutBorders(this);
         }
 
         /// <summary>
@@ -157,7 +162,7 @@ namespace UMS_Laser
 
             // Create a bitmap with the same size as the chart
             Bitmap bitmap = new Bitmap(chart.Width, chart.Height);
-            chart.DrawToBitmap(bitmap, new Rectangle(0, 0, chart.Width, chart.Height));
+            chart.DrawToBitmap(bitmap, new System.Drawing.Rectangle(0, 0, chart.Width, chart.Height));
 
             // Set the bitmap as the value of a specific cell in the DataGridView
             Result_dgv.Rows[section - 1].Cells[1].Value = bitmap;
@@ -224,6 +229,71 @@ namespace UMS_Laser
             //// Set the bitmap as the value of a specific cell in the DataGridView
             //Result_dgv.Rows[section - 1].Cells[1].Value = bitmap;
         }
+
+        // Return a Bitmap holding an image of the control.
+        private Bitmap GetControlImage(Control ctl)
+        {
+            Bitmap bm = new Bitmap(ctl.Width, ctl.Height);
+            ctl.DrawToBitmap(bm,
+                new System.Drawing.Rectangle(0, 0, ctl.Width, ctl.Height));
+            return bm;
+        }
+        // Return the form's image without its borders and decorations.
+        private Bitmap GetFormImageWithoutBorders(Form frm)
+        {
+            // Get the form's whole image.
+            using (Bitmap whole_form = GetControlImage(frm))
+            {
+                // See how far the form's upper left corner is
+                // from the upper left corner of its client area.
+                Point origin = frm.PointToScreen(new Point(0, 0));
+                int dx = origin.X - frm.Left;
+                int dy = origin.Y - frm.Top;
+
+                // Copy the client area into a new Bitmap.
+                int wid = frm.ClientSize.Width;
+                int hgt = frm.ClientSize.Height;
+                Bitmap bm = new Bitmap(wid, hgt);
+                using (Graphics gr = Graphics.FromImage(bm))
+                {
+                    gr.DrawImage(whole_form, 0, 0,
+                        new System.Drawing.Rectangle(dx, dy, wid, hgt),
+                        GraphicsUnit.Pixel);
+                }
+
+                //string path = $@"{Environment.CurrentDirectory}\{DateTime.Now.ToString("MMdd")}{LicensePlate_lb.Text}.jpg";
+                //bm.Save(path);
+
+                return bm;
+            }
+        }
+
+        private void Title_lb_Click(object sender, EventArgs e)
+        {
+            GetFormImageWithoutBorders(this);
+        }
+
+        private void Result_Shown(object sender, EventArgs e)
+        {
+            jpg2pdf(GetFormImageWithoutBorders(this));
+        }
+
+        private void jpg2pdf(Bitmap bmp)
+        {
+            //System.Drawing.Image image = System.Drawing.Image.FromFile("Your image file path");
+            string path = $@"{Environment.CurrentDirectory}\{DateTime.Now.ToString("MMddHHmm")}{LicensePlate_lb.Text}.pdf";
+            System.Drawing.Image image = bmp;
+            Document doc = new Document(new iTextSharp.text.Rectangle(image.Width, image.Height));
+            //Document doc = new Document(PageSize.A4);
+            PdfWriter.GetInstance(doc, new FileStream(path, FileMode.Create));
+            doc.Open();
+            iTextSharp.text.Image pdfImage = iTextSharp.text.Image.GetInstance(image, System.Drawing.Imaging.ImageFormat.Jpeg);
+            pdfImage.SetAbsolutePosition(0, 0);
+            pdfImage.ScaleToFit(doc.PageSize.Width, doc.PageSize.Height);
+            doc.Add(pdfImage);
+            doc.Close();
+        }
+
         #region Screenshot(Not in use)
         [DllImport("user32.dll")]
         public static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
@@ -259,7 +329,7 @@ namespace UMS_Laser
             Bitmap bmp2 = new Bitmap(wid, hgt);
             using (Graphics gr = Graphics.FromImage(bmp))
             {
-                gr.DrawImage(bmp, 0, 0, new Rectangle(rc.Right - rc.Left, rc.Bottom - rc.Top, wid, hgt),
+                gr.DrawImage(bmp, 0, 0, new System.Drawing.Rectangle(rc.Right - rc.Left, rc.Bottom - rc.Top, wid, hgt),
                     GraphicsUnit.Pixel);
             }
 
@@ -269,56 +339,5 @@ namespace UMS_Laser
             return bmp;
         }
         #endregion
-
-        // Return a Bitmap holding an image of the control.
-        private Bitmap GetControlImage(Control ctl)
-        {
-            Bitmap bm = new Bitmap(ctl.Width, ctl.Height);
-            ctl.DrawToBitmap(bm,
-                new Rectangle(0, 0, ctl.Width, ctl.Height));
-            return bm;
-        }
-        // Return the form's image without its borders and decorations.
-        private Bitmap GetFormImageWithoutBorders(Form frm)
-        {
-            // Get the form's whole image.
-            using (Bitmap whole_form = GetControlImage(frm))
-            {
-                // See how far the form's upper left corner is
-                // from the upper left corner of its client area.
-                Point origin = frm.PointToScreen(new Point(0, 0));
-                int dx = origin.X - frm.Left;
-                int dy = origin.Y - frm.Top;
-
-                // Copy the client area into a new Bitmap.
-                int wid = frm.ClientSize.Width;
-                int hgt = frm.ClientSize.Height;
-                Bitmap bm = new Bitmap(wid, hgt);
-                using (Graphics gr = Graphics.FromImage(bm))
-                {
-                    gr.DrawImage(whole_form, 0, 0,
-                        new Rectangle(dx, dy, wid, hgt),
-                        GraphicsUnit.Pixel);
-                }
-
-                string path = $@"{Environment.CurrentDirectory}\{DateTime.Now.ToString("MMdd")}{LicensePlate_lb.Text}.jpg";
-                bm.Save(path);
-
-                return bm;
-            }
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-            
-            //SetForegroundWindow(this.Handle);
-            //PrintWindow(GetForegroundWindow());
-            GetFormImageWithoutBorders(this);
-        }
-
-        private void Result_Load(object sender, EventArgs e)
-        {
-            label1.Select();
-        }
     }
 }

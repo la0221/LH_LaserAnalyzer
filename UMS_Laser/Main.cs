@@ -243,6 +243,9 @@ namespace UMS_Laser
                         SensorState = -1;
                         SensorProcess_idx = -2;
                         TestState_lb.Text = "量測結束";
+
+                        Form result = new Result(Department_tb.Text, LicensePlate_tb.Text, ProjectNo_tb.Text, StartPlace_tb.Text, Uplimit_tb.Text, Downlimit_tb.Text, rcv_tb.Text);
+                        result.Show();
                     }
                     break;
 
