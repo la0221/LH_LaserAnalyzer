@@ -89,28 +89,41 @@ namespace UMS_Laser
                 Debug.Print(line + "\r\n");
                 if (Split.Length == 3)
                 {
-                    DateTime date = DateTime.ParseExact(Split[0].Trim(), "MM-dd HH:mm:ss.fff", null);
-                    string value = Split[1].Trim();
-                    string sensor = Split[2].Trim();
-                    if (sensor == "1")
+                    try
                     {
-                        DT1.Add(date);
-                        S1_value.Add(float.Parse(value));
+
+                        DateTime date = DateTime.ParseExact(Split[0].Trim(), "MM-dd HH:mm:ss.fff", null);
+                        string value = Split[1].Trim();
+                        string sensor = Split[2].Trim();
+                        if (sensor == "1")
+                        {
+                            DT1.Add(date);
+                            S1_value.Add(float.Parse(value));
+                        }
+                        else if (sensor == "2")
+                        {
+                            DT2.Add(date);
+                            S2_value.Add(float.Parse(value));
+                        }
+                        else if (sensor == "3")
+                        {
+                            DT3.Add(date);
+                            S3_value.Add(float.Parse(value));
+                        }
+                        else if (sensor == "4")
+                        {
+                            DT4.Add(date);
+                            S4_value.Add(float.Parse(value));
+                        }
+                        else
+                        {
+
+                        }
                     }
-                    else if (sensor == "2")
+                    catch (Exception e)
                     {
-                        DT2.Add(date);
-                        S2_value.Add(float.Parse(value));
-                    }
-                    else if (sensor == "3")
-                    {
-                        DT3.Add(date);
-                        S3_value.Add(float.Parse(value));
-                    }
-                    else if (sensor == "4")
-                    {
-                        DT4.Add(date);
-                        S4_value.Add(float.Parse(value));
+                        MessageBox.Show("Get_SectionData(): " + e.Message);
+                        Debug.Print(e.Message);
                     }
                 }
             }
@@ -142,6 +155,7 @@ namespace UMS_Laser
             chart.ChartAreas[0].AxisX.IntervalAutoMode = IntervalAutoMode.FixedCount;
             chart.ChartAreas[0].AxisX.Minimum = DT[0].ToOADate();                        // 設置X軸最小值
             chart.ChartAreas[0].AxisX.Maximum = DT[DT.Count - 1].ToOADate(); // 設置X軸最大值
+            //chart.ChartAreas[0].AxisY.IntervalAutoMode = IntervalAutoMode.FixedCount;
             chart.Series[0].Points.DataBindXY(DT, value);
 
             // Draw Up Down Limit Line

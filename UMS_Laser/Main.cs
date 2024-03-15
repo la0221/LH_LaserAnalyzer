@@ -12,18 +12,30 @@ using System.Windows.Forms.DataVisualization.Charting;
 using System.Diagnostics;
 
 #region Design
-// 1. 量測結束後自動彈出「測試報告」視窗
-// 2. 上下限值儲存在設備中，開啟程式時自動讀取
-// 3. 可單獨匯入CSV產出報表
-// 4. 第一頁面直接輸入數據，測試報告不開放修改
-// 5. 量測結束自動匯出CSV並產生報表
+// 1. 量測結束後自動彈出「測試報告」視窗 (OK)
+// 2. 上下限值儲存在設備中，開啟程式時自動讀取 (OK)
+// 3. 可單獨匯入CSV產出報表 (OK)
+// 4. 第一頁面直接輸入數據，測試報告不開放修改 (OK)
+// 5. 量測結束自動匯出CSV並產生報表 (OK)
+
+// 已知Bug
+// 1. 上下限值設定未過濾(上下不得小於下限，非數字) (OK)
+// 2. 
+
+// 當前設計
+/* 
+ * 1. 量測完成時自動產出報表並儲存為pdf
+ * 2. 成功匯入csv後自動產出報表並儲存為pdf
+ * 3. 量測中止時不產出報表
+ * 4. 
+ * 
+*/
 #endregion
 
 namespace UMS_Laser
 {
     public partial class Main : Form
     {
-        private Queue<double> dataQueue = new Queue<double>(100);
         SerialPort LaserDevice_Port = new SerialPort();
         MainProcess mainProcess = new MainProcess();
         private int PreSensorState = -1;
@@ -41,7 +53,7 @@ namespace UMS_Laser
             GetComPort();
             mainProcess_Action();
 
-            debug_gb.Visible = true;
+            //debug_gb.Visible = true;
         }
 
         private void mainProcess_Action() 
@@ -374,6 +386,11 @@ namespace UMS_Laser
                 float u, l;
                 if (float.TryParse(Uplimit_tb.Text, out u) && float.TryParse(Downlimit_tb.Text, out l))
                 {
+                    if (u < l)
+                    {
+                        MessageBox.Show("上限值不可小於下限值", "錯誤");
+                        return;
+                    }
                     Uplimit_tb.Text = u.ToString("##0.00");
                     Downlimit_tb.Text = l.ToString("##0.00");
                     SerialSend(LaserDevice_Port, "uplimit " + u.ToString("##0.00"));
@@ -433,6 +450,93 @@ namespace UMS_Laser
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
             Environment.Exit(0);
+        }
+
+        private void ImportCSV_btn_Click(object sender, EventArgs e)
+        {
+            float u, l;
+            if (string.IsNullOrEmpty(Uplimit_tb.Text) || string.IsNullOrEmpty(Downlimit_tb.Text))
+            {
+                MessageBox.Show("上下限值不可為空", "錯誤");
+                return;
+            }
+            else
+            {
+                if (float.TryParse(Uplimit_tb.Text, out u) && float.TryParse(Downlimit_tb.Text, out l))
+                {
+                    if (u < l)
+                    {
+                        MessageBox.Show("上限值不可小於下限值", "錯誤");
+                        return;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("上下限值輸入錯誤", "錯誤");
+                    return;
+                }
+            }
+
+            rcv_tb.Clear();
+            // 建立一個OpenFileDialog物件
+            OpenFileDialog OFD = new OpenFileDialog();
+
+            // 設定OpenFileDialog屬性
+            OFD.Title = "選擇要開啟的CSV檔案";
+            OFD.InitialDirectory = Environment.CurrentDirectory;
+            OFD.Filter = "CSV Files (.csv)|*.csv|All Files (*.*)|*.*";
+            OFD.FilterIndex = 1;
+            OFD.Multiselect = true;
+
+            // 喚用ShowDialog方法，打開對話方塊
+
+            if (OFD.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                string theFile = OFD.FileName; //取得檔名
+                                                //Encoding enc = Encoding.GetEncoding("big5"); //設定檔案的編碼
+                string[] readText = System.IO.File.ReadAllLines(theFile, Encoding.Default); //以指定的編碼方式讀取檔案
+                foreach (string s in readText)
+                {
+                    rcv_tb.AppendText(s + "\r\n");
+                }
+                Form result = new Result(Department_tb.Text, LicensePlate_tb.Text, ProjectNo_tb.Text, StartPlace_tb.Text, Uplimit_tb.Text, Downlimit_tb.Text, rcv_tb.Text);
+                result.Show();
+            }
+        }
+
+        private void NewResult_btn_Click(object sender, EventArgs e)
+        {
+            float u, l;
+            if (string.IsNullOrEmpty(rcv_tb.Text))
+            {
+                MessageBox.Show("量測資料為空", "錯誤");
+                return;
+            }
+            else if (string.IsNullOrEmpty(Uplimit_tb.Text) || string.IsNullOrEmpty(Downlimit_tb.Text))
+            {
+                MessageBox.Show("上下限值不可為空", "錯誤");
+                return;
+            }
+            else 
+            {
+                if (float.TryParse(Uplimit_tb.Text, out u) && float.TryParse(Downlimit_tb.Text, out l))
+                {
+                    if (u < l)
+                    {
+                        MessageBox.Show("上限值不可小於下限值", "錯誤");
+                        return;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("上下限值輸入錯誤", "錯誤");
+                    return;
+                }
+            }
+
+            Form result = new Result(Department_tb.Text, LicensePlate_tb.Text, ProjectNo_tb.Text, StartPlace_tb.Text, Uplimit_tb.Text, Downlimit_tb.Text, rcv_tb.Text);
+            result.Show();
+            return;
         }
 
         #region 即時繪置折線圖
@@ -515,6 +619,20 @@ namespace UMS_Laser
 
         private void StartRead_button_Click(object sender, EventArgs e)
         {
+            float u, l;
+            if(float.TryParse(Uplimit_tb.Text, out u) && float.TryParse(Downlimit_tb.Text, out l))
+            {
+                if(u < l)
+                {
+                    MessageBox.Show("上限值不可小於下限值", "錯誤");
+                    return;
+                }                
+            }
+            else
+            {
+                MessageBox.Show("上下限值輸入錯誤", "錯誤");
+            }
+
             if (SensorProcess_idx == -2 || SensorProcess_idx == 2)
             {
                 SensorProcess_idx = -1;
@@ -547,13 +665,46 @@ namespace UMS_Laser
         {
             SerialSend(LaserDevice_Port, "alarm 0");
         }
+
         #endregion
 
-        private void DebugResult_btn_Click(object sender, EventArgs e)
+        private void Limit_tb_KeyDown(object sender, KeyEventArgs e)
         {
-            Form result = new Result(Department_tb.Text, LicensePlate_tb.Text, ProjectNo_tb.Text, StartPlace_tb.Text, "2.00", "0.50", rcv_tb.Text);
-            result.Show();
-            return;
+            if(e.KeyCode == Keys.Enter)
+            {
+                Thread SetLimit = new Thread(
+                delegate ()
+                {
+                    float u, l;
+                    if (float.TryParse(Uplimit_tb.Text, out u) && float.TryParse(Downlimit_tb.Text, out l))
+                    {
+                        if(u<l)
+                        {
+                            MessageBox.Show("上限值不可小於下限值", "錯誤");
+                            return;
+                        }
+
+                        Uplimit_tb.Text = u.ToString("##0.00");
+                        Downlimit_tb.Text = l.ToString("##0.00");
+                        SerialSend(LaserDevice_Port, "uplimit " + u.ToString("##0.00"));
+                        CheckUpdate_Up = true;
+                        Thread.Sleep(200);
+                        SerialSend(LaserDevice_Port, "lowlimit " + l.ToString("##0.00"));
+                        CheckUpdate_Low = true;
+
+                        if (CheckLimitUpdate())
+                            MessageBox.Show("設定完成");
+                        else
+                            MessageBox.Show("設定失敗，請確認設定值後再試一次");
+                    }
+                    else
+                    {
+                        MessageBox.Show("參數錯誤，請確認輸入");
+                        return;
+                    }
+                });
+                SetLimit.Start();
+            }
         }
     }
 }
