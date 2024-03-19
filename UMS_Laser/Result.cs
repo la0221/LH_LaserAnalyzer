@@ -1,32 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Deployment.Application;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Runtime.InteropServices;
-using static UMS_Laser.Result;
 using System.Drawing.Imaging;
-using System.Threading;
-using iTextSharp;
 using iTextSharp.text.pdf;
 using iTextSharp.text;
 using System.IO;
-using System.Xml.Linq;
-using iTextSharp.text.pdf.collection;
-using System.Net.Http.Headers;
-using static System.Collections.Specialized.BitVector32;
-using static System.Net.Mime.MediaTypeNames;
-using Org.BouncyCastle.Crypto.Modes;
-
 namespace UMS_Laser
 {
     public partial class Result : Form
@@ -172,7 +154,8 @@ namespace UMS_Laser
             Series series = chart.Series[0];
             series.ChartType = SeriesChartType.Line;
             series.XValueType = ChartValueType.DateTime;
-
+            
+            // X軸設定
             chart.ChartAreas[0].AxisX.LabelStyle.Format = "HH:mm:ss.fff";
             chart.ChartAreas[0].AxisX.IntervalType = DateTimeIntervalType.Milliseconds;
             //chart.ChartAreas[0].AxisX.Interval = 1000;
@@ -181,6 +164,12 @@ namespace UMS_Laser
             chart.ChartAreas[0].AxisX.Maximum = DT[DT.Count - 1].ToOADate(); // 設置X軸最大值
             chart.ChartAreas[0].AxisX.Maximum = DT[DT.Count - 1].ToOADate(); // 設置X軸最大值
             //chart.ChartAreas[0].AxisY.IntervalAutoMode = IntervalAutoMode.FixedCount;
+
+            // Y軸設定
+            chart.ChartAreas[0].AxisY.Maximum = 30;
+            chart.ChartAreas[0].AxisY.Minimum = -30;
+
+
             chart.Series[0].Points.DataBindXY(DT, value);
 
             // Draw Up Down Limit Line
@@ -288,7 +277,7 @@ namespace UMS_Laser
         private void jpg2pdf(Bitmap bmp)
         {
             //System.Drawing.Image image = System.Drawing.Image.FromFile("Your image file path");
-            string path = $@"{Environment.CurrentDirectory}\{DateTime.Now.ToString("MMddHHmm")}{LicensePlate_lb.Text}.pdf";
+            string path = $@"{Environment.CurrentDirectory}\{DateTime.Now.ToString("MMddHHmm")}_{LicensePlate_lb.Text}.pdf";
             System.Drawing.Image image = bmp;
             Document doc = new Document(new iTextSharp.text.Rectangle(image.Width, image.Height));
             //Document doc = new Document(PageSize.A4);
@@ -342,7 +331,7 @@ namespace UMS_Laser
                     GraphicsUnit.Pixel);
             }
 
-            string path = $@"{Environment.CurrentDirectory}\{DateTime.Now.ToString("MMdd")}{LicensePlate_lb.Text}.jpg";
+            string path = $@"{Environment.CurrentDirectory}\{DateTime.Now.ToString("MMdd")}_{LicensePlate_lb.Text}.jpg";
             bmp2.Save(path);
 
             return bmp;
@@ -357,13 +346,13 @@ namespace UMS_Laser
         private void CreatePDF()
         {
             var doc = new Document(PageSize.A4, 0, 0 ,0 , 0); // size, left, right, top, bottom
-            string path = $@"{Environment.CurrentDirectory}\{DateTime.Now.ToString("MMddHHmm")}{LicensePlate_lb.Text}.pdf";
+            string path = $@"{Environment.CurrentDirectory}\{DateTime.Now.ToString("MMddHHmm")}_ {LicensePlate_lb.Text}.pdf";
 
             // 檢查是否有想同檔名檔案
             int cnt = 1;
             while(File.Exists(path))
             {
-                path = $@"{Environment.CurrentDirectory}\{DateTime.Now.ToString("MMddHHmm")}{LicensePlate_lb.Text}_{cnt}.pdf";
+                path = $@"{Environment.CurrentDirectory}\{DateTime.Now.ToString("MMddHHmm")}_{LicensePlate_lb.Text}_{cnt}.pdf";
                 cnt++;
             }
 
@@ -372,7 +361,7 @@ namespace UMS_Laser
             // 字體設定
             BaseFont  ChBf = BaseFont.CreateFont(@"C:\Windows\Fonts\msjh.ttc,1", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED); // 微軟正黑體
             iTextSharp.text.Font Ch_Title = new iTextSharp.text.Font(ChBf, 36, iTextSharp.text.Font.BOLD, BaseColor.BLACK);
-            iTextSharp.text.Font Ch_Content = new iTextSharp.text.Font(ChBf, 10 , iTextSharp.text.Font.NORMAL, BaseColor.BLACK);
+            iTextSharp.text.Font Ch_Content = new iTextSharp.text.Font(ChBf, 10, iTextSharp.text.Font.NORMAL, BaseColor.BLACK);
             doc.Open();
             // 標題
             Paragraph Title_pa = new Paragraph("聯合電訊工程行", Ch_Title);
@@ -467,10 +456,10 @@ namespace UMS_Laser
             PdfPCell P2 = new PdfPCell(img[1], true);
             PdfPCell P3 = new PdfPCell(img[2], true);
             PdfPCell P4 = new PdfPCell(img[3], true);
-            PdfPCell R1 = new PdfPCell(new Phrase(Result_dgv.Rows[0].Cells[2].Value.ToString()));
-            PdfPCell R2 = new PdfPCell(new Phrase(Result_dgv.Rows[1].Cells[2].Value.ToString()));
-            PdfPCell R3 = new PdfPCell(new Phrase(Result_dgv.Rows[2].Cells[2].Value.ToString()));
-            PdfPCell R4 = new PdfPCell(new Phrase(Result_dgv.Rows[3].Cells[2].Value.ToString()));
+            PdfPCell R1 = new PdfPCell(new Phrase(Result_dgv.Rows[0].Cells[2].Value.ToString(), Ch_Content));
+            PdfPCell R2 = new PdfPCell(new Phrase(Result_dgv.Rows[1].Cells[2].Value.ToString(), Ch_Content));
+            PdfPCell R3 = new PdfPCell(new Phrase(Result_dgv.Rows[2].Cells[2].Value.ToString(), Ch_Content));
+            PdfPCell R4 = new PdfPCell(new Phrase(Result_dgv.Rows[3].Cells[2].Value.ToString(), Ch_Content));
             C1.HorizontalAlignment = Element.ALIGN_CENTER;
             C2.HorizontalAlignment = Element.ALIGN_CENTER;
             C3.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -565,5 +554,10 @@ namespace UMS_Laser
             doc.Add(Content_pa);
             doc.Close();
         }
+
+        //private PdfPCell CreateCell()
+        //{
+            
+        //}
     }
 }

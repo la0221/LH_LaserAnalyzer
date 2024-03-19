@@ -29,7 +29,6 @@ namespace UMS_Laser
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.COM_cb = new System.Windows.Forms.ComboBox();
             this.COM_Connect_btn = new System.Windows.Forms.Button();
@@ -141,7 +140,7 @@ namespace UMS_Laser
             this.clear_tb_btn.Name = "clear_tb_btn";
             this.clear_tb_btn.Size = new System.Drawing.Size(411, 71);
             this.clear_tb_btn.TabIndex = 15;
-            this.clear_tb_btn.Text = "清除接收視窗";
+            this.clear_tb_btn.Text = "清除量測資料";
             this.clear_tb_btn.UseVisualStyleBackColor = true;
             this.clear_tb_btn.Click += new System.EventHandler(this.clear_tb_btn_Click);
             // 
@@ -156,7 +155,6 @@ namespace UMS_Laser
             this.rcv_tb.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.rcv_tb.Size = new System.Drawing.Size(631, 700);
             this.rcv_tb.TabIndex = 51;
-            this.rcv_tb.Text = resources.GetString("rcv_tb.Text");
             // 
             // debug_gb
             // 
@@ -300,7 +298,7 @@ namespace UMS_Laser
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(216, 47);
             this.label5.TabIndex = 52;
-            this.label5.Text = "下限";
+            this.label5.Text = "下限值：";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Downlimit_tb
@@ -338,7 +336,7 @@ namespace UMS_Laser
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(224, 47);
             this.label4.TabIndex = 52;
-            this.label4.Text = "上限";
+            this.label4.Text = "上限值：";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // SetLimit_button

@@ -182,6 +182,7 @@ namespace UMS_Laser
                     
                     else if(rcv.Contains("TEST START"))
                     {
+                        rcv_tb.Clear();
                         SensorProcess_idx = -1;
                         SensorProcess(0);
                     }
@@ -285,9 +286,18 @@ namespace UMS_Laser
 
         private void exp2csv_btn_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(rcv_tb.Text))
+            {
+                MessageBox.Show("量測資料為空", "錯誤");
+                return;
+            }
+
+            string fn = $"{DateTime.Now.ToString("yyyyMMdd")}_{LicensePlate_tb.Text}.csv";
             SaveFileDialog saveCSV = new SaveFileDialog();
-            saveCSV.Filter = "Textfile|*.txt|Comma-Separated Values|*.csv";
-            saveCSV.Title = "Save Data";
+            //saveCSV.Filter = "Textfile|*.txt|Comma-Separated Values|*.csv";
+            saveCSV.Filter = "Comma-Separated Values|*.csv";
+            saveCSV.Title = "匯出";
+            saveCSV.FileName = fn;
             saveCSV.AddExtension = true;
             saveCSV.CheckPathExists = true;
             //saveCSV.ShowDialog();
@@ -375,14 +385,13 @@ namespace UMS_Laser
                 Thread SendData = new Thread(
                     delegate ()
                     {
-                        Port.Write(message+"\r\n");
+                        Port.Write(message + "\r\n");
                     });
                 SendData.Start();
             }
-            else return;
+            else 
+                return;
         }
-
-
         #endregion
 
         private void clear_tb_btn_Click(object sender, EventArgs e)
@@ -514,7 +523,7 @@ namespace UMS_Laser
 
                 if (result == null || result.IsDisposed)
                 {
-                    Form result = new Result(Department_tb.Text, LicensePlate_tb.Text, ProjectNo_tb.Text, StartPlace_tb.Text, Uplimit_tb.Text, Downlimit_tb.Text, rcv_tb.Text);
+                    result = new Result(Department_tb.Text, LicensePlate_tb.Text, ProjectNo_tb.Text, StartPlace_tb.Text, Uplimit_tb.Text, Downlimit_tb.Text, rcv_tb.Text);
                     result.Show();
                 }
             }
@@ -522,9 +531,9 @@ namespace UMS_Laser
 
         private void NewResult_btn_Click(object sender, EventArgs e)
         {
-            result = new Result(Department_tb.Text, LicensePlate_tb.Text, ProjectNo_tb.Text, StartPlace_tb.Text, "2.05", "0.5", rcv_tb.Text);
-            result.Show();
-            return;
+            //result = new Result(Department_tb.Text, LicensePlate_tb.Text, ProjectNo_tb.Text, StartPlace_tb.Text, "2.05", "0.5", rcv_tb.Text);
+            //result.Show();
+            //return;
 
             if (SensorProcess_idx ==-1 || SensorProcess_idx == 0 || SensorProcess_idx == 1)
             {
@@ -649,6 +658,11 @@ namespace UMS_Laser
         private void StartRead_button_Click(object sender, EventArgs e)
         {
             float u, l;
+            if(!LaserDevice_Port.IsOpen)
+            {
+                MessageBox.Show("設備尚未連接", "連線錯誤");
+                return;
+            }
             if(float.TryParse(Uplimit_tb.Text, out u) && float.TryParse(Downlimit_tb.Text, out l))
             {
                 if(u < l)
@@ -664,6 +678,7 @@ namespace UMS_Laser
 
             if (SensorProcess_idx == -2 || SensorProcess_idx == 2)
             {
+                rcv_tb.Clear();
                 SensorProcess_idx = -1;
                 SerialSend(LaserDevice_Port, "start");
             }
@@ -671,6 +686,11 @@ namespace UMS_Laser
 
         private void StopRead_button_Click(object sender, EventArgs e)
         {
+            if (!LaserDevice_Port.IsOpen)
+            {
+                MessageBox.Show("設備尚未連接", "連線錯誤");
+                return;
+            }
             SensorProcess_idx = 2;
             SerialSend(LaserDevice_Port, "stop");
         }
@@ -692,6 +712,11 @@ namespace UMS_Laser
 
         private void BuzzOff_button_Click(object sender, EventArgs e)
         {
+            if (!LaserDevice_Port.IsOpen)
+            {
+                MessageBox.Show("設備尚未連接", "連線錯誤");
+                return;
+            }
             SerialSend(LaserDevice_Port, "alarm 0");
         }
 
