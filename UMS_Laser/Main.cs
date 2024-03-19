@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.IO.Ports;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 #region Design
 // 1. 量測結束後自動彈出「測試報告」視窗 (OK)
@@ -46,6 +47,8 @@ namespace UMS_Laser
         private bool CheckUpdate_Low = false;
         private bool UpdateCompleteUp = false;
         private bool UpdateCompleteLow = false;
+        private bool TestDone = false;
+        private Form result = null;
         public Main()
         {
             CheckForIllegalCrossThreadCalls = false;
@@ -58,7 +61,7 @@ namespace UMS_Laser
 
         private void mainProcess_Action() 
         { 
-            mainProcess.SerialSend = (data) => { SerialSend(LaserDevice_Port, data); };
+            //mainProcess.SerialSend = (data) => { SerialSend(LaserDevice_Port, data); };
         }
 
         private void COM_Connect_btn_Click(object sender, EventArgs e)
@@ -222,7 +225,17 @@ namespace UMS_Laser
             {
                 case -2:    //  Standby
                     Debug.WriteLine("SensorProcess(): Standby");
-                    //SensorProcess_idx++;
+                    //if (TestDone)
+                    //{
+                    //    Thread GetResult = new Thread(delegate ()
+                    //    {
+                    //        result = new Result(Department_tb.Text, LicensePlate_tb.Text, ProjectNo_tb.Text, StartPlace_tb.Text, Uplimit_tb.Text, Downlimit_tb.Text, rcv_tb.Text);
+                    //        result.Show();
+                    //    });
+                    //    GetResult.SetApartmentState(ApartmentState.STA);
+                    //    GetResult.Start();
+                    //}
+                    //SensorProcess_idx 
                     break;
 
                 case -1:    //  偵測到第一Sensor
@@ -256,8 +269,7 @@ namespace UMS_Laser
                         SensorProcess_idx = -2;
                         TestState_lb.Text = "量測結束";
 
-                        Form result = new Result(Department_tb.Text, LicensePlate_tb.Text, ProjectNo_tb.Text, StartPlace_tb.Text, Uplimit_tb.Text, Downlimit_tb.Text, rcv_tb.Text);
-                        result.Show();
+                        TestDone = true;                        
                     }
                     break;
 
@@ -499,13 +511,27 @@ namespace UMS_Laser
                 {
                     rcv_tb.AppendText(s + "\r\n");
                 }
-                Form result = new Result(Department_tb.Text, LicensePlate_tb.Text, ProjectNo_tb.Text, StartPlace_tb.Text, Uplimit_tb.Text, Downlimit_tb.Text, rcv_tb.Text);
-                result.Show();
+
+                if (result == null || result.IsDisposed)
+                {
+                    Form result = new Result(Department_tb.Text, LicensePlate_tb.Text, ProjectNo_tb.Text, StartPlace_tb.Text, Uplimit_tb.Text, Downlimit_tb.Text, rcv_tb.Text);
+                    result.Show();
+                }
             }
         }
 
         private void NewResult_btn_Click(object sender, EventArgs e)
         {
+            result = new Result(Department_tb.Text, LicensePlate_tb.Text, ProjectNo_tb.Text, StartPlace_tb.Text, "2.05", "0.5", rcv_tb.Text);
+            result.Show();
+            return;
+
+            if (SensorProcess_idx ==-1 || SensorProcess_idx == 0 || SensorProcess_idx == 1)
+            {
+                MessageBox.Show("量測中，請先停止量測", "錯誤");
+                return;
+            }
+
             float u, l;
             if (string.IsNullOrEmpty(rcv_tb.Text))
             {
@@ -534,8 +560,11 @@ namespace UMS_Laser
                 }
             }
 
-            Form result = new Result(Department_tb.Text, LicensePlate_tb.Text, ProjectNo_tb.Text, StartPlace_tb.Text, Uplimit_tb.Text, Downlimit_tb.Text, rcv_tb.Text);
-            result.Show();
+            if (result == null || result.IsDisposed)
+            {
+                result = new Result(Department_tb.Text, LicensePlate_tb.Text, ProjectNo_tb.Text, StartPlace_tb.Text, Uplimit_tb.Text, Downlimit_tb.Text, rcv_tb.Text);
+                result.Show();
+            }
             return;
         }
 

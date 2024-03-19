@@ -29,6 +29,7 @@ namespace UMS_Laser
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.COM_cb = new System.Windows.Forms.ComboBox();
             this.COM_Connect_btn = new System.Windows.Forms.Button();
@@ -135,7 +136,7 @@ namespace UMS_Laser
             // clear_tb_btn
             // 
             this.clear_tb_btn.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.clear_tb_btn.Location = new System.Drawing.Point(1337, 613);
+            this.clear_tb_btn.Location = new System.Drawing.Point(1337, 786);
             this.clear_tb_btn.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.clear_tb_btn.Name = "clear_tb_btn";
             this.clear_tb_btn.Size = new System.Drawing.Size(411, 71);
@@ -155,6 +156,7 @@ namespace UMS_Laser
             this.rcv_tb.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.rcv_tb.Size = new System.Drawing.Size(631, 700);
             this.rcv_tb.TabIndex = 51;
+            this.rcv_tb.Text = resources.GetString("rcv_tb.Text");
             // 
             // debug_gb
             // 
