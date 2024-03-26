@@ -48,7 +48,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>LH_Logo256.ico</ApplicationIcon>
+    <ApplicationIcon>LH_Logo_256.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
@@ -119,6 +119,8 @@
   <ItemGroup>
     <Content Include="LH_Logo.ico" />
     <Content Include="LH_Logo256.ico" />
+    <Content Include="LH_Logo48.ico" />
+    <Content Include="LH_Logo_256.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
