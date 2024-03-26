@@ -11,6 +11,7 @@ using System.IO.Ports;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.IO;
 
 #region Design
 // 1. 量測結束後自動彈出「測試報告」視窗 (OK)
@@ -33,7 +34,7 @@ using System.Threading.Tasks;
 */
 #endregion
 
-namespace UMS_Laser
+namespace LH_LaserAnalyzer
 {
     public partial class Main : Form
     {
@@ -51,6 +52,9 @@ namespace UMS_Laser
         private Form result = null;
         public Main()
         {
+            string folderPath = $@"{Environment.CurrentDirectory}\Result";
+            if(!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
             CheckForIllegalCrossThreadCalls = false;
             InitializeComponent();  
             GetComPort();
@@ -292,7 +296,7 @@ namespace UMS_Laser
                 return;
             }
 
-            string fn = $"{DateTime.Now.ToString("yyyyMMdd")}_{LicensePlate_tb.Text}.csv";
+            string fn = $"{LicensePlate_tb.Text}_{DateTime.Now.ToString("yyyyMMdd")}.csv";
             SaveFileDialog saveCSV = new SaveFileDialog();
             //saveCSV.Filter = "Textfile|*.txt|Comma-Separated Values|*.csv";
             saveCSV.Filter = "Comma-Separated Values|*.csv";
@@ -504,7 +508,7 @@ namespace UMS_Laser
 
             // 設定OpenFileDialog屬性
             OFD.Title = "選擇要開啟的CSV檔案";
-            OFD.InitialDirectory = Environment.CurrentDirectory;
+            OFD.InitialDirectory = $@"{Environment.CurrentDirectory}\Result\";
             OFD.Filter = "CSV Files (.csv)|*.csv|All Files (*.*)|*.*";
             OFD.FilterIndex = 1;
             OFD.Multiselect = true;

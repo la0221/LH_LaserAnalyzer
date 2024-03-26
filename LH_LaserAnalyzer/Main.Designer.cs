@@ -1,5 +1,5 @@
 ﻿
-namespace UMS_Laser
+namespace LH_LaserAnalyzer
 {
     partial class Main
     {
@@ -29,6 +29,7 @@ namespace UMS_Laser
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.COM_cb = new System.Windows.Forms.ComboBox();
             this.COM_Connect_btn = new System.Windows.Forms.Button();
@@ -501,9 +502,10 @@ namespace UMS_Laser
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox10);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Main";
-            this.Text = "UMS雷射檢測";
+            this.Text = "測距收集分析軟體";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
             this.Load += new System.EventHandler(this.Main_Load);
             this.groupBox10.ResumeLayout(false);

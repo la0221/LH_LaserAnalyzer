@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace UMS_Laser
+namespace LH_LaserAnalyzer
 {
     internal class MainProcess
     {

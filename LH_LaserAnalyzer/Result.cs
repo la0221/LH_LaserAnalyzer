@@ -9,7 +9,7 @@ using System.Drawing.Imaging;
 using iTextSharp.text.pdf;
 using iTextSharp.text;
 using System.IO;
-namespace UMS_Laser
+namespace LH_LaserAnalyzer
 {
     public partial class Result : Form
     {
@@ -345,14 +345,14 @@ namespace UMS_Laser
 
         private void CreatePDF()
         {
-            var doc = new Document(PageSize.A4, 0, 0 ,0 , 0); // size, left, right, top, bottom
-            string path = $@"{Environment.CurrentDirectory}\{DateTime.Now.ToString("MMddHHmm")}_ {LicensePlate_lb.Text}.pdf";
+            var doc = new Document(PageSize.A4, 0, 0 ,0 , 0); // size, left, right, top, bottom            
+            string path = $@"{Environment.CurrentDirectory}\Result\{LicensePlate_lb.Text}_{DateTime.Now.ToString("MMddHHmm")}.pdf";
 
             // 檢查是否有想同檔名檔案
             int cnt = 1;
             while(File.Exists(path))
             {
-                path = $@"{Environment.CurrentDirectory}\{DateTime.Now.ToString("MMddHHmm")}_{LicensePlate_lb.Text}_{cnt}.pdf";
+                path = $@"{Environment.CurrentDirectory}\Result\{LicensePlate_lb.Text}_{DateTime.Now.ToString("MMddHHmm")}_{cnt}.pdf";
                 cnt++;
             }
 

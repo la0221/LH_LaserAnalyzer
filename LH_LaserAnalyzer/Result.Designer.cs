@@ -1,4 +1,4 @@
-﻿namespace UMS_Laser
+﻿namespace LH_LaserAnalyzer
 {
     partial class Result
     {
