@@ -146,7 +146,7 @@ namespace LH_LaserAnalyzer
                 return new Chart();
             }
 
-            Chart chart = new Chart();
+            Chart chart = new Chart();            
             chart.Dock = DockStyle.Fill;
             chart.Size = new Size(800, 150);
             chart.Series.Add(new Series());
@@ -154,6 +154,8 @@ namespace LH_LaserAnalyzer
             Series series = chart.Series[0];
             series.ChartType = SeriesChartType.Line;
             series.XValueType = ChartValueType.DateTime;
+            chart.ChartAreas[0].AxisX.MajorGrid.LineDashStyle = ChartDashStyle.Dash; // X軸網格線樣式 20240410
+            chart.ChartAreas[0].AxisY.MajorGrid.LineDashStyle = ChartDashStyle.Dash; // Y軸網格線樣式 20240410
             
             // X軸設定
             chart.ChartAreas[0].AxisX.LabelStyle.Format = "HH:mm:ss.fff";
