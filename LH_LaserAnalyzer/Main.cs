@@ -148,6 +148,13 @@ namespace LH_LaserAnalyzer
                     
                     if(rcv.Contains("Uplimit"))
                     {
+                        // 未設定上限值時為NAN
+                        if(rcv.Contains("NAN"))
+                        {
+                            Uplimit_tb.Text = "NAN";
+                            return;
+                        }
+
                         if (CheckUpdate_Up)
                         {
                             Debug.WriteLine("Check Update Up");
@@ -164,6 +171,13 @@ namespace LH_LaserAnalyzer
 
                     else if(rcv.Contains("Lowlimit"))
                     {
+                        // 未設定下限值時為NAN
+                        if(rcv.Contains("NAN"))
+                        {
+                            Downlimit_tb.Text = "NAN";
+                            return;
+                        }
+
                         if(CheckUpdate_Low)
                         {
                             Debug.WriteLine("Check Update Low");
