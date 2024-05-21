@@ -168,8 +168,10 @@ namespace LH_LaserAnalyzer
             //chart.ChartAreas[0].AxisY.IntervalAutoMode = IntervalAutoMode.FixedCount;
 
             // Y軸設定
-            chart.ChartAreas[0].AxisY.Maximum = 30;
-            chart.ChartAreas[0].AxisY.Minimum = -30;
+            chart.ChartAreas[0].AxisY.Maximum = (int)UpLimit + 5;
+            chart.ChartAreas[0].AxisY.Minimum = (int)DownLimit - 5;
+            //chart.ChartAreas[0].AxisY.Maximum = 30;
+            //chart.ChartAreas[0].AxisY.Minimum = -30;
 
 
             chart.Series[0].Points.DataBindXY(DT, value);
@@ -178,15 +180,15 @@ namespace LH_LaserAnalyzer
             StripLine UPL = new StripLine();
             UPL.IntervalOffset = UpLimit;
             UPL.Interval = 0;
-            UPL.StripWidth = 0.04;
+            UPL.StripWidth = 0.1;
             UPL.BackColor = Color.Red;
-            UPL.BorderDashStyle = ChartDashStyle.DashDot;
+            //UPL.BorderDashStyle = ChartDashStyle.DashDot;
             chart.ChartAreas[0].AxisY.StripLines.Add(UPL);
 
             StripLine DOWNL = new StripLine();
             DOWNL.IntervalOffset = DownLimit;
             DOWNL.Interval = 0;
-            DOWNL.StripWidth = 0.04;
+            DOWNL.StripWidth = 0.1;
             DOWNL.BackColor = Color.Red;
             chart.ChartAreas[0].AxisY.StripLines.Add(DOWNL);
 
@@ -342,7 +344,7 @@ namespace LH_LaserAnalyzer
 
         private void Result_FormClosing(object sender, FormClosingEventArgs e)
         {
-            this.Dispose();
+            this.Dispose();            
         }
 
         private void CreatePDF()
@@ -355,10 +357,17 @@ namespace LH_LaserAnalyzer
             while(File.Exists(path))
             {
                 path = $@"{Environment.CurrentDirectory}\Result\{LicensePlate_lb.Text}_{DateTime.Now.ToString("MMddHHmm")}_{cnt}.pdf";
-                cnt++;
+                cnt++;               
             }
 
-            PdfWriter.GetInstance(doc, new FileStream(path, FileMode.Create)); // 建立PDF檔案
+            try
+            {   
+                PdfWriter.GetInstance(doc, new FileStream(path, FileMode.Create)); // 建立PDF檔案
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("CreatePDF(): " + e.Message);
+            }
 
             // 字體設定
             BaseFont  ChBf = BaseFont.CreateFont(@"C:\Windows\Fonts\msjh.ttc,1", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED); // 微軟正黑體
@@ -381,8 +390,8 @@ namespace LH_LaserAnalyzer
             PdfPCell _Dep = new PdfPCell(new Phrase(Department_lb.Text, Ch_Content));
             PdfPCell Lic_Plate = new PdfPCell(new Phrase("車號：", Ch_Content));
             PdfPCell _Lic_Plate = new PdfPCell(new Phrase(LicensePlate_lb.Text, Ch_Content));
-            PdfPCell ProjNo= new PdfPCell(new Phrase("工程文號：", Ch_Content));
-            PdfPCell _ProjNo= new PdfPCell(new Phrase(ProjectNum_lb.Text, Ch_Content));
+            PdfPCell ProjNo = new PdfPCell(new Phrase("工程文號：", Ch_Content));
+            PdfPCell _ProjNo = new PdfPCell(new Phrase(ProjectNum_lb.Text, Ch_Content));
             PdfPCell Test_St = new PdfPCell(new Phrase("測試起點：", Ch_Content));
             PdfPCell _Test_St = new PdfPCell(new Phrase(StartPlace_lb.Text, Ch_Content));
             PdfPCell UD_Li = new PdfPCell(new Phrase("上限值：\r\n下限值：", Ch_Content));
@@ -557,9 +566,236 @@ namespace LH_LaserAnalyzer
             doc.Close();
         }
 
-        //private PdfPCell CreateCell()
-        //{
-            
-        //}
+        /// <summary>
+        /// 直接輸出pdf
+        /// </summary>
+        /// <param name="dept"></param>
+        /// <param name="lic_plate"></param>
+        /// <param name="proj_number"></param>
+        /// <param name="st_place"></param>
+        /// <param name="up_limit"></param>
+        /// <param name="down_limit"></param>
+        /// <param name="data"></param>
+        public void CreatePDF_WithoutForm()
+        {
+            var doc = new Document(PageSize.A4, 0, 0 ,0 , 0); // size, left, right, top, bottom            
+            string path = $@"{Environment.CurrentDirectory}\Result\{LicensePlate_lb.Text}_{DateTime.Now.ToString("MMddHHmm")}.pdf";
+
+            // 檢查是否有想同檔名檔案
+            int cnt = 1;
+            while(File.Exists(path))
+            {
+                path = $@"{Environment.CurrentDirectory}\Result\{LicensePlate_lb.Text}_{DateTime.Now.ToString("MMddHHmm")}_{cnt}.pdf";
+                cnt++;
+            }
+
+            try
+            {   
+                PdfWriter.GetInstance(doc, new FileStream(path, FileMode.Create)); // 建立PDF檔案
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("CreatePDF(): " + e.Message);
+            }
+
+            // 字體設定
+            BaseFont  ChBf = BaseFont.CreateFont(@"C:\Windows\Fonts\msjh.ttc,1", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED); // 微軟正黑體
+            iTextSharp.text.Font Ch_Title = new iTextSharp.text.Font(ChBf, 36, iTextSharp.text.Font.BOLD, BaseColor.BLACK);
+            iTextSharp.text.Font Ch_Content = new iTextSharp.text.Font(ChBf, 10, iTextSharp.text.Font.NORMAL, BaseColor.BLACK);
+            doc.Open();
+            // 標題
+            Paragraph Title_pa = new Paragraph("聯合電訊工程行", Ch_Title);
+            Title_pa.Alignment = Element.ALIGN_CENTER;
+
+            // 內容
+            Paragraph Content_pa = new Paragraph();
+            // 測試資訊(單位, 車號, 工程文號, 測試起點, 上下限值, 量測時間)
+            PdfPTable TestConent_tb = new PdfPTable(new float[] { 0.8f, 2, 0.8f, 2, 0.8f, 2 });
+            TestConent_tb.LockedWidth = true;
+            TestConent_tb.TotalWidth = 580f;
+            TestConent_tb.HorizontalAlignment = Element.ALIGN_CENTER;
+            //TestConent_tb.DefaultCell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+            PdfPCell Dep = new PdfPCell(new Phrase("單位：", Ch_Content));
+            PdfPCell _Dep = new PdfPCell(new Phrase(Department_lb.Text, Ch_Content));
+            PdfPCell Lic_Plate = new PdfPCell(new Phrase("車號：", Ch_Content));
+            PdfPCell _Lic_Plate = new PdfPCell(new Phrase(LicensePlate_lb.Text, Ch_Content));
+            PdfPCell ProjNo = new PdfPCell(new Phrase("工程文號：", Ch_Content));
+            PdfPCell _ProjNo = new PdfPCell(new Phrase(ProjectNum_lb.Text, Ch_Content));
+            PdfPCell Test_St = new PdfPCell(new Phrase("測試起點：", Ch_Content));
+            PdfPCell _Test_St = new PdfPCell(new Phrase(StartPlace_lb.Text, Ch_Content));
+            PdfPCell UD_Li = new PdfPCell(new Phrase("上限值：\r\n下限值：", Ch_Content));
+            PdfPCell _UD_Li = new PdfPCell(new Phrase(UpDownLimit_lb.Text, Ch_Content));
+            PdfPCell Test_ti = new PdfPCell(new Phrase("量測時間：", Ch_Content));
+            PdfPCell _Test_ti = new PdfPCell(new Phrase(TestTime_lb.Text, Ch_Content));
+            Dep.HorizontalAlignment = Element.ALIGN_CENTER;
+            _Dep.HorizontalAlignment = Element.ALIGN_CENTER;
+            Lic_Plate.HorizontalAlignment = Element.ALIGN_CENTER;
+            _Lic_Plate.HorizontalAlignment = Element.ALIGN_CENTER;
+            ProjNo.HorizontalAlignment = Element.ALIGN_CENTER;
+            _ProjNo.HorizontalAlignment = Element.ALIGN_CENTER;
+            Test_St.HorizontalAlignment = Element.ALIGN_CENTER;
+            _Test_St.HorizontalAlignment = Element.ALIGN_CENTER;
+            UD_Li.HorizontalAlignment = Element.ALIGN_CENTER;
+            _UD_Li.HorizontalAlignment = Element.ALIGN_CENTER;
+            Test_ti.HorizontalAlignment = Element.ALIGN_CENTER;
+            _Test_ti.HorizontalAlignment = Element.ALIGN_CENTER;
+            Dep.VerticalAlignment = Element.ALIGN_MIDDLE;
+            _Dep.VerticalAlignment = Element.ALIGN_MIDDLE;
+            Lic_Plate.VerticalAlignment = Element.ALIGN_MIDDLE;
+            _Lic_Plate.VerticalAlignment = Element.ALIGN_MIDDLE;                
+            ProjNo.VerticalAlignment = Element.ALIGN_MIDDLE;
+            _ProjNo.VerticalAlignment = Element.ALIGN_MIDDLE;
+            Test_St.VerticalAlignment = Element.ALIGN_MIDDLE;
+            _Test_St.VerticalAlignment = Element.ALIGN_MIDDLE;
+            UD_Li.VerticalAlignment = Element.ALIGN_MIDDLE;
+            _UD_Li.VerticalAlignment = Element.ALIGN_MIDDLE;
+            Test_ti.VerticalAlignment = Element.ALIGN_MIDDLE;
+            _Test_ti.VerticalAlignment = Element.ALIGN_MIDDLE;
+
+            //Dep.Border = iTextSharp.text.Rectangle.NO_BORDER;
+            //_Dep.Border = iTextSharp.text.Rectangle.NO_BORDER;
+            //Lic_Plate.Border = iTextSharp.text.Rectangle.NO_BORDER;
+            //_Lic_Plate.Border = iTextSharp.text.Rectangle.NO_BORDER;
+            //ProjNo.Border = iTextSharp.text.Rectangle.NO_BORDER;
+            //_ProjNo.Border = iTextSharp.text.Rectangle.NO_BORDER;
+            //Test_St.Border = iTextSharp.text.Rectangle.NO_BORDER;
+            //_Test_St.Border = iTextSharp.text.Rectangle.NO_BORDER;
+            //UD_Li.Border = iTextSharp.text.Rectangle.NO_BORDER;
+            //_UD_Li.Border = iTextSharp.text.Rectangle.NO_BORDER;
+            //Test_ti.Border = iTextSharp.text.Rectangle.NO_BORDER;
+            //_Test_ti.Border = iTextSharp.text.Rectangle.NO_BORDER;
+
+            TestConent_tb.AddCell(Dep);
+            TestConent_tb.AddCell(_Dep);
+            TestConent_tb.AddCell(Lic_Plate);
+            TestConent_tb.AddCell(_Lic_Plate);
+            TestConent_tb.AddCell(ProjNo);
+            TestConent_tb.AddCell(_ProjNo);
+            TestConent_tb.AddCell(Test_St);
+            TestConent_tb.AddCell(_Test_St);
+            TestConent_tb.AddCell(UD_Li);
+            TestConent_tb.AddCell(_UD_Li);
+            TestConent_tb.AddCell(Test_ti);
+            TestConent_tb.AddCell(_Test_ti);
+                        
+            // 測試結果
+            PdfPTable Result_tb = new PdfPTable(new float[] { 1.2f, 10, 1.2f, 2 });
+            Result_tb.LockedWidth = true;
+            Result_tb.TotalWidth = 580f;
+            Result_tb.HorizontalAlignment = Element.ALIGN_CENTER;
+            PdfPCell C1 = new PdfPCell(new Phrase("感測區域", Ch_Content));
+            PdfPCell C2 =new PdfPCell(new Phrase("圖示(單位mm)", Ch_Content));
+            PdfPCell C3 = new PdfPCell(new Phrase("測試結果", Ch_Content));
+            PdfPCell C4 = new PdfPCell(new Phrase("確認工程師", Ch_Content));
+            PdfPCell S1 = new PdfPCell(new Phrase("S1", Ch_Content));
+            PdfPCell S2 = new PdfPCell(new Phrase("S2", Ch_Content));
+            PdfPCell S3 = new PdfPCell(new Phrase("S3", Ch_Content));
+            PdfPCell S4 = new PdfPCell(new Phrase("S4", Ch_Content));
+
+            PdfPCell P1 = new PdfPCell(img[0], true);
+            PdfPCell P2 = new PdfPCell(img[1], true);
+            PdfPCell P3 = new PdfPCell(img[2], true);
+            PdfPCell P4 = new PdfPCell(img[3], true);
+            PdfPCell R1 = new PdfPCell(new Phrase(Result_dgv.Rows[0].Cells[2].Value.ToString(), Ch_Content));
+            PdfPCell R2 = new PdfPCell(new Phrase(Result_dgv.Rows[1].Cells[2].Value.ToString(), Ch_Content));
+            PdfPCell R3 = new PdfPCell(new Phrase(Result_dgv.Rows[2].Cells[2].Value.ToString(), Ch_Content));
+            PdfPCell R4 = new PdfPCell(new Phrase(Result_dgv.Rows[3].Cells[2].Value.ToString(), Ch_Content));
+            C1.HorizontalAlignment = Element.ALIGN_CENTER;
+            C2.HorizontalAlignment = Element.ALIGN_CENTER;
+            C3.HorizontalAlignment = Element.ALIGN_CENTER;
+            C4.HorizontalAlignment = Element.ALIGN_CENTER;
+            S1.HorizontalAlignment = Element.ALIGN_CENTER;
+            S2.HorizontalAlignment = Element.ALIGN_CENTER;
+            S3.HorizontalAlignment = Element.ALIGN_CENTER;
+            S4.HorizontalAlignment = Element.ALIGN_CENTER;
+            P1.HorizontalAlignment = Element.ALIGN_CENTER;
+            P2.HorizontalAlignment = Element.ALIGN_CENTER;
+            P3.HorizontalAlignment = Element.ALIGN_CENTER;
+            P4.HorizontalAlignment = Element.ALIGN_CENTER;
+            R1.HorizontalAlignment = Element.ALIGN_CENTER;
+            R2.HorizontalAlignment = Element.ALIGN_CENTER;
+            R3.HorizontalAlignment = Element.ALIGN_CENTER;
+            R4.HorizontalAlignment = Element.ALIGN_CENTER;
+            C1.VerticalAlignment = Element.ALIGN_MIDDLE;
+            C2.VerticalAlignment = Element.ALIGN_MIDDLE;
+            C3.VerticalAlignment = Element.ALIGN_MIDDLE;
+            C4.VerticalAlignment = Element.ALIGN_MIDDLE;
+            S1.VerticalAlignment = Element.ALIGN_MIDDLE;
+            S2.VerticalAlignment = Element.ALIGN_MIDDLE;
+            S3.VerticalAlignment = Element.ALIGN_MIDDLE;
+            S4.VerticalAlignment = Element.ALIGN_MIDDLE;
+            P1.VerticalAlignment = Element.ALIGN_MIDDLE;
+            P2.VerticalAlignment = Element.ALIGN_MIDDLE;
+            P3.VerticalAlignment = Element.ALIGN_MIDDLE;
+            P4.VerticalAlignment = Element.ALIGN_MIDDLE;
+            R1.VerticalAlignment = Element.ALIGN_MIDDLE;
+            R2.VerticalAlignment = Element.ALIGN_MIDDLE;
+            R3.VerticalAlignment = Element.ALIGN_MIDDLE;
+            R4.VerticalAlignment = Element.ALIGN_MIDDLE;
+
+            Result_tb.AddCell(C1);
+            Result_tb.AddCell(C2);
+            Result_tb.AddCell(C3);
+            Result_tb.AddCell(C4);
+            Result_tb.AddCell(S1);
+            Result_tb.AddCell(P1);
+            Result_tb.AddCell(R1);
+            Result_tb.AddCell(" ");
+            Result_tb.AddCell(S2);
+            Result_tb.AddCell(P2);
+            Result_tb.AddCell(R2);                
+            Result_tb.AddCell(" ");
+            Result_tb.AddCell(S3);
+            Result_tb.AddCell(P3);
+            Result_tb.AddCell(R3);
+            Result_tb.AddCell(" ");
+            Result_tb.AddCell(S4);
+            Result_tb.AddCell(P4);
+            Result_tb.AddCell(R4);
+            Result_tb.AddCell(" ");
+
+            // 測試人員簽名
+            PdfPTable Sign_tb =new PdfPTable(6);
+            Sign_tb.LockedWidth = true;
+            Sign_tb.TotalWidth = 580f;
+            PdfPCell testreport = new PdfPCell(new Phrase("測試報告：\n\n\n\n\n", Ch_Content));
+            testreport.Colspan = 6;
+            testreport.Rowspan = 5;
+            testreport.HorizontalAlignment = Element.ALIGN_LEFT;
+            testreport.VerticalAlignment = Element.ALIGN_TOP;
+            PdfPCell approve = new PdfPCell(new Phrase("核准：", Ch_Content));
+            PdfPCell super_sign = new PdfPCell(new Phrase("主管簽核：", Ch_Content));
+            PdfPCell tester = new PdfPCell(new Phrase("測試人員：", Ch_Content));
+            approve.HorizontalAlignment = Element.ALIGN_CENTER;
+            super_sign.HorizontalAlignment = Element.ALIGN_CENTER;
+            tester.HorizontalAlignment = Element.ALIGN_CENTER;
+            Sign_tb.AddCell(testreport);            
+            Sign_tb.AddCell(approve);
+            Sign_tb.AddCell(" ");
+            Sign_tb.AddCell(super_sign);
+            Sign_tb.AddCell(" ");
+            Sign_tb.AddCell(tester);
+            Sign_tb.AddCell(" ");
+
+            // 將所有表格加入內容
+            Content_pa.Add("\r\n");
+            Content_pa.Add(TestConent_tb);
+            Content_pa.Add("\r\n");
+            Content_pa.Add(Result_tb);
+            Content_pa.Add("\r\n");
+            Content_pa.Add(Sign_tb);
+
+            // 文件內容
+            doc.AddTitle(LicensePlate_lb.Text + "雷射圓盤檢測報告"); 
+            doc.AddAuthor("聯合電訊工程行");
+            doc.AddCreationDate();
+
+            doc.Add(Title_pa);
+            doc.Add(Content_pa);
+            doc.Close();
+
+            // 開啟匯出之PDF檔
+            Process.Start(path);
+        }
     }
 }

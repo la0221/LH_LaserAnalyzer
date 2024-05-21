@@ -77,7 +77,6 @@
     <Compile Include="Result.Designer.cs">
       <DependentUpon>Result.cs</DependentUpon>
     </Compile>
-    <Compile Include="MainProcess.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -39,7 +39,6 @@ namespace LH_LaserAnalyzer
     public partial class Main : Form
     {
         SerialPort LaserDevice_Port = new SerialPort();
-        MainProcess mainProcess = new MainProcess();
         private int PreSensorState = -1;
         private int SensorState = -1;
         private int StartSensor = 0;
@@ -49,7 +48,7 @@ namespace LH_LaserAnalyzer
         private bool UpdateCompleteUp = false;
         private bool UpdateCompleteLow = false;
         private bool TestDone = false;
-        private Form result = null;
+        private Form result = null; // Not in use        
         public Main()
         {
             string folderPath = $@"{Environment.CurrentDirectory}\Result";
@@ -425,9 +424,9 @@ namespace LH_LaserAnalyzer
                 float u, l;
                 if (float.TryParse(Uplimit_tb.Text, out u) && float.TryParse(Downlimit_tb.Text, out l))
                 {
-                    if (u < l)
+                    if (u <= l)
                     {
-                        MessageBox.Show("上限值不可小於下限值", "錯誤");
+                        MessageBox.Show("上限值不可小於或等於下限值", "錯誤");
                         return;
                     }
                     Uplimit_tb.Text = u.ToString("##0.00");
@@ -503,9 +502,9 @@ namespace LH_LaserAnalyzer
             {
                 if (float.TryParse(Uplimit_tb.Text, out u) && float.TryParse(Downlimit_tb.Text, out l))
                 {
-                    if (u < l)
+                    if (u <= l)
                     {
-                        MessageBox.Show("上限值不可小於下限值", "錯誤");
+                        MessageBox.Show("上限值不可小於或等於下限值", "錯誤");
                         return;
                     }
                 }
@@ -541,18 +540,18 @@ namespace LH_LaserAnalyzer
 
                 if (result == null || result.IsDisposed)
                 {
-                    result = new Result(Department_tb.Text, LicensePlate_tb.Text, ProjectNo_tb.Text, StartPlace_tb.Text, Uplimit_tb.Text, Downlimit_tb.Text, rcv_tb.Text);
-                    result.Show();
+                    //result = new Result(Department_tb.Text, LicensePlate_tb.Text, ProjectNo_tb.Text, StartPlace_tb.Text, Uplimit_tb.Text, Downlimit_tb.Text, rcv_tb.Text);
+                    //result.Show();
+
+                    // 更改為直接輸出pdf後開啟
+                    Result r = new Result(Department_tb.Text, LicensePlate_tb.Text, ProjectNo_tb.Text, StartPlace_tb.Text, Uplimit_tb.Text, Downlimit_tb.Text, rcv_tb.Text);
+                    r.CreatePDF_WithoutForm();
                 }
             }
         }
 
         private void NewResult_btn_Click(object sender, EventArgs e)
         {
-            //result = new Result(Department_tb.Text, LicensePlate_tb.Text, ProjectNo_tb.Text, StartPlace_tb.Text, "2.05", "0.5", rcv_tb.Text);
-            //result.Show();
-            //return;
-
             if (SensorProcess_idx ==-1 || SensorProcess_idx == 0 || SensorProcess_idx == 1)
             {
                 MessageBox.Show("量測中，請先停止量測", "錯誤");
@@ -574,9 +573,9 @@ namespace LH_LaserAnalyzer
             {
                 if (float.TryParse(Uplimit_tb.Text, out u) && float.TryParse(Downlimit_tb.Text, out l))
                 {
-                    if (u < l)
+                    if (u <= l)
                     {
-                        MessageBox.Show("上限值不可小於下限值", "錯誤");
+                        MessageBox.Show("上限值不可小於或等於下限值", "錯誤");
                         return;
                     }
                 }
@@ -589,8 +588,12 @@ namespace LH_LaserAnalyzer
 
             if (result == null || result.IsDisposed)
             {
-                result = new Result(Department_tb.Text, LicensePlate_tb.Text, ProjectNo_tb.Text, StartPlace_tb.Text, Uplimit_tb.Text, Downlimit_tb.Text, rcv_tb.Text);
-                result.Show();
+                //result = new Result(Department_tb.Text, LicensePlate_tb.Text, ProjectNo_tb.Text, StartPlace_tb.Text, Uplimit_tb.Text, Downlimit_tb.Text, rcv_tb.Text);
+                //result.Show();
+
+                // 更改為直接輸出pdf後開啟
+                Result r = new Result(Department_tb.Text, LicensePlate_tb.Text, ProjectNo_tb.Text, StartPlace_tb.Text, Uplimit_tb.Text, Downlimit_tb.Text, rcv_tb.Text);
+                r.CreatePDF_WithoutForm();
             }
             return;
         }
@@ -683,9 +686,9 @@ namespace LH_LaserAnalyzer
             }
             if(float.TryParse(Uplimit_tb.Text, out u) && float.TryParse(Downlimit_tb.Text, out l))
             {
-                if(u < l)
+                if(u <= l)
                 {
-                    MessageBox.Show("上限值不可小於下限值", "錯誤");
+                    MessageBox.Show("上限值不可小於或等於下限值", "錯誤");
                     return;
                 }                
             }
@@ -750,9 +753,9 @@ namespace LH_LaserAnalyzer
                     float u, l;
                     if (float.TryParse(Uplimit_tb.Text, out u) && float.TryParse(Downlimit_tb.Text, out l))
                     {
-                        if(u<l)
+                        if(u <= l)
                         {
-                            MessageBox.Show("上限值不可小於下限值", "錯誤");
+                            MessageBox.Show("上限值不可小於或等於下限值", "錯誤");
                             return;
                         }
 
