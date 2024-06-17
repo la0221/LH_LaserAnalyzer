@@ -12,6 +12,8 @@ using System.Windows.Forms.DataVisualization.Charting;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.IO;
+using Microsoft.VisualBasic;
+using static iTextSharp.text.pdf.events.IndexEvents;
 
 #region Design
 // 1. 量測結束後自動彈出「測試報告」視窗 (OK)
@@ -48,7 +50,16 @@ namespace LH_LaserAnalyzer
         private bool UpdateCompleteUp = false;
         private bool UpdateCompleteLow = false;
         private bool TestDone = false;
-        private Form result = null; // Not in use        
+        private Form result = null; // Not in use
+
+        // 雷射校正
+        private int Cali_idx = 0;
+        private const int CALI_FAIL = -1;
+        private const int CALI_START = 0;
+        private const int CALI_WAIT = 1;
+        private const int CALI_MIN = 2;
+        private const int CALI_MAX = 3;
+        private const int CALI_DONE = 4;
         public Main()
         {
             string folderPath = $@"{Environment.CurrentDirectory}\Result";
@@ -69,7 +80,27 @@ namespace LH_LaserAnalyzer
 
         private void COM_Connect_btn_Click(object sender, EventArgs e)
         {
-            if(COM_cb.Text == "Result")
+            if (COM_cb.Text == "Cali")
+            {
+                if (!LaserDevice_Port.IsOpen)
+                {
+                    MessageBox.Show("設備尚未連接", "連線錯誤");
+                    return;
+                }
+                MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+                DialogResult result = MessageBox.Show("確定要進行校正嗎？", "校正", buttons);
+                if (result == DialogResult.Yes)
+                {
+                    Thread Cali_Thread = new Thread(delegate ()
+                    {
+                        CalibrationProcess();
+                    });
+                    Cali_Thread.Start();
+                }               
+                return;
+            }
+
+            if (COM_cb.Text == "Result")
             {
                 Form result = new Result(Department_tb.Text, LicensePlate_tb.Text, ProjectNo_tb.Text, StartPlace_tb.Text, Uplimit_tb.Text, Downlimit_tb.Text, rcv_tb.Text);
                 result.Show();
@@ -209,6 +240,27 @@ namespace LH_LaserAnalyzer
                         return;
                     }
 
+                    // 雷射校正 最小值
+                    else if(rcv.Contains("Please put the sensor on the min distance and enter the number on laser display"))
+                    {
+                        Debug.WriteLine("LaserDevice_DataReceived: Cali_idx = CALI_MIN");
+                        Cali_idx = CALI_MIN;
+                    }
+
+                    // 雷射校正 最大值
+                    else if (rcv.Contains("Please put the sensor on the max distance and enter the number on laser display"))
+                    {
+                        Debug.WriteLine("LaserDevice_DataReceived: Cali_idx = CALI_MAX");
+                        Cali_idx = CALI_MAX;
+                    }
+
+                    // 雷射校正完成
+                    else if(rcv.Contains("min_distance:") && rcv.Contains("max_distance:"))
+                    {
+                        Debug.WriteLine("LaserDevice_DataReceived: Cali_idx = CALI_DONE");
+                        Cali_idx = CALI_DONE;
+                    }
+
                     // 雷射距離數據
                     else if (rcv.Contains(',') && rcv.Split(',')[1].Contains("-1"))  // sensor尚未偵測
                     {
@@ -298,6 +350,112 @@ namespace LH_LaserAnalyzer
                     SensorProcess_idx = -2;
                     TestState_lb.Text = "量測中止";
                     break;
+            }
+        }
+
+        private void CalibrationProcess()
+        {
+            Cali_idx = CALI_START;
+            while (true)
+            {
+                switch (Cali_idx)
+                {
+                    case CALI_FAIL:
+                        Debug.WriteLine("Calibration Process: CALI_FAIL");
+                        TestState_lb.Text = "雷射表頭校正失敗";
+                        MessageBox.Show("雷射表頭校正失敗，請重啟設備後再進行校正");
+                        return;
+
+                    case CALI_START:
+                        Debug.WriteLine("Calibration Process: CALI_START");
+                        TestState_lb.Text = "雷射表頭校正中";
+                        SerialSend(LaserDevice_Port, "cali");
+                        Cali_idx = CALI_WAIT;
+                        break;
+
+                    //  等待進入最小/大值
+                    case CALI_WAIT:
+                        Debug.WriteLine("Calibration Process: CALI_WAIT");
+                        Stopwatch sw = new Stopwatch();
+                        sw.Reset();
+                        sw.Start();
+                        for (int i = 0; i < 100000000; i++) // nEntries is typically more than 500,000  
+                        {
+                            if(Cali_idx != CALI_WAIT)
+                            {
+                                break;
+                            }
+
+                            //Debug.WriteLine("等待回應");
+                            if (sw.ElapsedMilliseconds > 2000) // 2秒內未回應則跳出
+                            {
+                                Cali_idx = -1;
+                                break;
+                            }
+                        }
+                        break;
+
+                    // 雷射校正 最小值
+                    case CALI_MIN:
+                        Debug.WriteLine("Calibration Process: CALI_MIN");
+                        string Min = Interaction.InputBox("請將雷射表頭移動至小於0之位置，待穩定後輸入表頭上顯示之數值", "雷射表頭校正", "0", -1, -1);
+                        TestState_lb.Text = "雷射表頭負值校正中";
+
+                        if(Min.Length <= 0)
+                        {
+                            Debug.WriteLine("Cancel");
+                            Cali_idx = -1;
+                            break;
+                        }
+
+                        if (float.TryParse(Min, out float min) && min < 0 && min > -15.5)
+                        {
+                            string min_v = min.ToString("F2");
+                            Debug.WriteLine($"Min Value: {min_v}");
+                            rcv_tb.AppendText($"Min: {min_v}\r\n");
+                            SerialSend(LaserDevice_Port, min_v);
+                            Cali_idx = CALI_WAIT;
+                        }
+                        else
+                        {
+                            MessageBox.Show("輸入錯誤，請重新輸入", "錯誤");
+                        }
+
+                        break;
+
+                    // 雷射校正 最大值
+                    case CALI_MAX:
+                        Debug.WriteLine("Calibration Process: CALI_MAX");
+                        string Max = Interaction.InputBox("請將雷射表頭移動至大於0之位置，待穩定後輸入表頭上顯示之數值", "雷射表頭校正", "0", -1, -1);
+                        TestState_lb.Text = "雷射表頭正值校正中";
+
+                        if (Max.Length <= 0)
+                        {
+                            Debug.WriteLine("Cancel");
+                            Cali_idx = -1;
+                            break;
+                        }
+
+                        if (float.TryParse(Max, out float max) && max > 0 && max < 15.5)
+                        {
+                            string max_v = max.ToString("F2");
+                            Debug.WriteLine($"Max Value: {max_v}");
+                            rcv_tb.AppendText($"Max: {max}\r\n");
+                            SerialSend(LaserDevice_Port, max_v);
+                            Cali_idx = CALI_WAIT;
+                        }
+                        else
+                        {
+                            MessageBox.Show("輸入錯誤，請重新輸入", "錯誤");
+                        }
+                        break;
+                    
+                    case CALI_DONE:
+                        Debug.WriteLine("Calibration Process: CALI_DONE");
+                        MessageBox.Show("雷射表頭校正完成");
+                        TestState_lb.Text = "雷射表頭校正完成";
+                        return;
+                }
             }
         }
 
