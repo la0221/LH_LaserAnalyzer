@@ -88,7 +88,7 @@ namespace LH_LaserAnalyzer
                     return;
                 }
                 MessageBoxButtons buttons = MessageBoxButtons.YesNo;
-                DialogResult result = MessageBox.Show("確定要進行校正嗎？", "校正", buttons);
+                DialogResult result = MessageBox.Show("是否執行雷射表頭校正？", "雷射表頭校正", buttons);
                 if (result == DialogResult.Yes)
                 {
                     Thread Cali_Thread = new Thread(delegate ()
@@ -409,7 +409,7 @@ namespace LH_LaserAnalyzer
                         }
 
                         if (float.TryParse(Min, out float min) && min < 0 && min > -15.5)
-                        {
+                        {   
                             string min_v = min.ToString("F2");
                             Debug.WriteLine($"Min Value: {min_v}");
                             rcv_tb.AppendText($"Min: {min_v}\r\n");
@@ -463,7 +463,7 @@ namespace LH_LaserAnalyzer
         {
             if (string.IsNullOrEmpty(rcv_tb.Text))
             {
-                MessageBox.Show("量測資料為空", "錯誤");
+                MessageBox.Show("量測資料為空", "匯出錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -472,6 +472,7 @@ namespace LH_LaserAnalyzer
             //saveCSV.Filter = "Textfile|*.txt|Comma-Separated Values|*.csv";
             saveCSV.Filter = "Comma-Separated Values|*.csv";
             saveCSV.Title = "匯出";
+            //saveCSV.InitialDirectory = $@"{Environment.CurrentDirectory}\Result\";
             saveCSV.FileName = fn;
             saveCSV.AddExtension = true;
             saveCSV.CheckPathExists = true;
@@ -584,7 +585,7 @@ namespace LH_LaserAnalyzer
                 {
                     if (u <= l)
                     {
-                        MessageBox.Show("上限值不可小於或等於下限值", "錯誤");
+                        MessageBox.Show("上限值不可小於或等於下限值", "上下限值錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
                     Uplimit_tb.Text = u.ToString("##0.00");
@@ -596,13 +597,13 @@ namespace LH_LaserAnalyzer
                     CheckUpdate_Low = true;
 
                     if(CheckLimitUpdate())
-                        MessageBox.Show("設定完成");
+                        MessageBox.Show("設定完成", "上下限值設定");
                     else
-                        MessageBox.Show("設定失敗，請確認設定值後再試一次");
+                        MessageBox.Show("設定失敗，請確認設定值後再試一次", "上下限值設定錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
                 else
                 {
-                    MessageBox.Show("參數錯誤，請確認輸入");
+                    MessageBox.Show("上下限值錯誤，請確認輸入為數字", "上下限值錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
             });
@@ -653,7 +654,7 @@ namespace LH_LaserAnalyzer
             float u, l;
             if (string.IsNullOrEmpty(Uplimit_tb.Text) || string.IsNullOrEmpty(Downlimit_tb.Text))
             {
-                MessageBox.Show("上下限值不可為空", "錯誤");
+                MessageBox.Show("上下限值不可為空", "上下限值錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             else
@@ -662,13 +663,13 @@ namespace LH_LaserAnalyzer
                 {
                     if (u <= l)
                     {
-                        MessageBox.Show("上限值不可小於或等於下限值", "錯誤");
+                        MessageBox.Show("上限值不可小於或等於下限值", "上下限值錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
                 }
                 else
                 {
-                    MessageBox.Show("上下限值輸入錯誤", "錯誤");
+                    MessageBox.Show("上下限值輸入錯誤", "上下限值錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
             }
@@ -679,7 +680,7 @@ namespace LH_LaserAnalyzer
 
             // 設定OpenFileDialog屬性
             OFD.Title = "選擇要開啟的CSV檔案";
-            OFD.InitialDirectory = $@"{Environment.CurrentDirectory}\Result\";
+            //OFD.InitialDirectory = $@"{Environment.CurrentDirectory}\Result\";
             OFD.Filter = "CSV Files (.csv)|*.csv|All Files (*.*)|*.*";
             OFD.FilterIndex = 1;
             OFD.Multiselect = true;
@@ -688,22 +689,31 @@ namespace LH_LaserAnalyzer
 
             if (OFD.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                string theFile = OFD.FileName; //取得檔名
-                                                //Encoding enc = Encoding.GetEncoding("big5"); //設定檔案的編碼
-                string[] readText = System.IO.File.ReadAllLines(theFile, Encoding.Default); //以指定的編碼方式讀取檔案
-                foreach (string s in readText)
+                try
                 {
-                    rcv_tb.AppendText(s + "\r\n");
+                    string theFile = OFD.FileName; //取得檔名
+                                                   //Encoding enc = Encoding.GetEncoding("big5"); //設定檔案的編碼
+                    string[] readText = System.IO.File.ReadAllLines(theFile, Encoding.Default); //以指定的編碼方式讀取檔案
+                    foreach (string s in readText)
+                    {
+                        rcv_tb.AppendText(s + "\r\n");
+                    }
+
+                    if (result == null || result.IsDisposed)
+                    {
+                        //result = new Result(Department_tb.Text, LicensePlate_tb.Text, ProjectNo_tb.Text, StartPlace_tb.Text, Uplimit_tb.Text, Downlimit_tb.Text, rcv_tb.Text);
+                        //result.Show();
+
+                        // 更改為直接輸出pdf後開啟
+                        Result r = new Result(Department_tb.Text, LicensePlate_tb.Text, ProjectNo_tb.Text, StartPlace_tb.Text, Uplimit_tb.Text, Downlimit_tb.Text, rcv_tb.Text);
+                        r.CreatePDF_WithoutForm();
+                    }
                 }
-
-                if (result == null || result.IsDisposed)
+                catch (Exception ex)
                 {
-                    //result = new Result(Department_tb.Text, LicensePlate_tb.Text, ProjectNo_tb.Text, StartPlace_tb.Text, Uplimit_tb.Text, Downlimit_tb.Text, rcv_tb.Text);
-                    //result.Show();
-
-                    // 更改為直接輸出pdf後開啟
-                    Result r = new Result(Department_tb.Text, LicensePlate_tb.Text, ProjectNo_tb.Text, StartPlace_tb.Text, Uplimit_tb.Text, Downlimit_tb.Text, rcv_tb.Text);
-                    r.CreatePDF_WithoutForm();
+                    rcv_tb.Clear();
+                    MessageBox.Show("匯入失敗，請確認檔案格式正確", "匯入錯誤", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    Debug.WriteLine(ex.Message);
                 }
             }
         }
@@ -712,19 +722,19 @@ namespace LH_LaserAnalyzer
         {
             if (SensorProcess_idx ==-1 || SensorProcess_idx == 0 || SensorProcess_idx == 1)
             {
-                MessageBox.Show("量測中，請先停止量測", "錯誤");
+                MessageBox.Show("量測中，請先停止量測", "量測結果錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             float u, l;
             if (string.IsNullOrEmpty(rcv_tb.Text))
             {
-                MessageBox.Show("量測資料為空", "錯誤");
+                MessageBox.Show("量測資料為空", "上下限值錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             else if (string.IsNullOrEmpty(Uplimit_tb.Text) || string.IsNullOrEmpty(Downlimit_tb.Text))
             {
-                MessageBox.Show("上下限值不可為空", "錯誤");
+                MessageBox.Show("上下限值不可為空", "上下限值錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             else 
@@ -733,13 +743,13 @@ namespace LH_LaserAnalyzer
                 {
                     if (u <= l)
                     {
-                        MessageBox.Show("上限值不可小於或等於下限值", "錯誤");
+                        MessageBox.Show("上限值不可小於或等於下限值", "上下限值錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
                 }
                 else
                 {
-                    MessageBox.Show("上下限值輸入錯誤", "錯誤");
+                    MessageBox.Show("上下限值輸入錯誤", "上下限值錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
             }
@@ -756,82 +766,6 @@ namespace LH_LaserAnalyzer
             return;
         }
 
-        #region 即時繪置折線圖
-
-        /// <summary>
-        /// 初始化圖表
-        /// </summary>
-        //private void InitChart()
-        //{
-        //    //定義圖表區域
-        //    this.Result_chart.ChartAreas.Clear();
-        //    ChartArea chartArea1 = new ChartArea("C1");
-        //    this.Result_chart.ChartAreas.Add(chartArea1);
-        //    //定義存儲和顯示點的容器
-        //    this.Result_chart.Series.Clear();
-        //    Series series1 = new Series("S1");
-        //    series1.ChartArea = "C1";
-        //    series1.MarkerStyle = MarkerStyle.Circle;
-        //    this.Result_chart.Series.Add(series1);
-        //    //設置圖表顯示樣式
-        //    this.Result_chart.ChartAreas[0].AxisY.Minimum = 0;
-        //    this.Result_chart.ChartAreas[0].AxisY.Maximum = 100;
-        //    this.Result_chart.ChartAreas[0].AxisX.Interval = 5;
-        //    this.Result_chart.ChartAreas[0].AxisX.MajorGrid.LineColor = System.Drawing.Color.Silver;
-        //    this.Result_chart.ChartAreas[0].AxisY.MajorGrid.LineColor = System.Drawing.Color.Silver;
-        //    //設置標題
-        //    this.Result_chart.Titles.Clear();
-        //    this.Result_chart.Titles.Add("S01");
-        //    this.Result_chart.Titles[0].Text = "XXX顯示";
-        //    this.Result_chart.Titles[0].ForeColor = Color.RoyalBlue;
-        //    this.Result_chart.Titles[0].Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-        //    //設置圖表顯示樣式
-        //    this.Result_chart.Series[0].Color = Color.Red;
-        //    if (true)
-        //    {
-        //        this.Result_chart.Titles[0].Text = "折線圖";
-        //        this.Result_chart.Series[0].ChartType = SeriesChartType.Line;
-        //    }
-        //    this.Result_chart.Series[0].Points.Clear();
-        //}
-
-        ////更新隊列中的值
-        //private void UpdateQueueValue(double v)
-        //{
-
-        //}
-
-        //private void UpdateChart(double v)
-        //{
-        //    this.Result_chart.Series[0].Points.AddXY(0, v);
-        //}
-
-        //private void Result_chart_MouseMove(object sender, MouseEventArgs e)
-        //{
-        //    HitTestResult mytestresult = Result_chart.HitTest(e.X, e.Y);
-        //    if (true/*e.Button == MouseButtons.Left*/)//判断是否是鼠标左键点击
-        //    {
-        //        if (mytestresult.ChartElementType == ChartElementType.DataPoint)//判断我们点击这个返回集是否是chart的数据点的类型
-        //        {
-        //            toolTip1.AutoPopDelay = 5000;//表示tooltip在这个控件中保留展示的时间
-        //            toolTip1.InitialDelay = 1000;//表示鼠标指针必须在这里静止的时间
-        //            toolTip1.ReshowDelay = 500;//可以缩短或延长在显示上一个工具提示窗口后显示工具提示窗口之前等待的时间tooltip
-        //            toolTip1.ShowAlways = true;//获取或设置一个值，该值指示是否显示工具提示窗口，甚至是在其父控件不活动的时候。
-
-        //            try
-        //            {
-        //                toolTip1.SetToolTip(Result_chart, "名稱：" + mytestresult.Series.Name + "\r\n" + "值：" + Result_chart.Series[0].Points[mytestresult.PointIndex]);//设置ToolTip展示的值的内容，mytestresult.Series.Name表示折线的名字，chart1.Series[0].Points[mytestresult.PointIndex]表示chart图表中的第0（从0开始也就是第一条）条折线的数据点的第多少个，
-        //                                                                                                                                                             //也可以设置chart1.Series[0].Points[mytestresult.PointIndex].XValue;这个代表你点击这个点的x轴的值，chart1.Series[0].Points[mytestresult.PointIndex].YValues[0];这个代表你点击的点Y轴的值
-        //            }
-        //            catch (Exception)
-        //            {
-
-        //            }
-        //        }
-        //    }
-        //}
-        #endregion
-
         #region Debug
 
         private void StartRead_button_Click(object sender, EventArgs e)
@@ -839,20 +773,20 @@ namespace LH_LaserAnalyzer
             float u, l;
             if(!LaserDevice_Port.IsOpen)
             {
-                MessageBox.Show("設備尚未連接", "連線錯誤");
+                MessageBox.Show("設備尚未連接", "連線錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             if(float.TryParse(Uplimit_tb.Text, out u) && float.TryParse(Downlimit_tb.Text, out l))
             {
                 if(u <= l)
                 {
-                    MessageBox.Show("上限值不可小於或等於下限值", "錯誤");
+                    MessageBox.Show("上限值不可小於或等於下限值", "上下限值錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }                
             }
             else
             {
-                MessageBox.Show("上下限值輸入錯誤", "錯誤");
+                MessageBox.Show("上下限值輸入錯誤", "上下限值錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
             if (SensorProcess_idx == -2 || SensorProcess_idx == 2)
@@ -867,7 +801,7 @@ namespace LH_LaserAnalyzer
         {
             if (!LaserDevice_Port.IsOpen)
             {
-                MessageBox.Show("設備尚未連接", "連線錯誤");
+                MessageBox.Show("設備尚未連接", "連線錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             SensorProcess_idx = 2;
@@ -893,7 +827,7 @@ namespace LH_LaserAnalyzer
         {
             if (!LaserDevice_Port.IsOpen)
             {
-                MessageBox.Show("設備尚未連接", "連線錯誤");
+                MessageBox.Show("設備尚未連接", "連線錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             SerialSend(LaserDevice_Port, "alarm 0");
@@ -913,7 +847,7 @@ namespace LH_LaserAnalyzer
                     {
                         if(u <= l)
                         {
-                            MessageBox.Show("上限值不可小於或等於下限值", "錯誤");
+                            MessageBox.Show("上限值不可小於或等於下限值", "上下限值錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             return;
                         }
 
@@ -926,13 +860,13 @@ namespace LH_LaserAnalyzer
                         CheckUpdate_Low = true;
 
                         if (CheckLimitUpdate())
-                            MessageBox.Show("設定完成");
+                            MessageBox.Show("設定完成", "上下限值設定");
                         else
-                            MessageBox.Show("設定失敗，請確認設定值後再試一次");
+                            MessageBox.Show("設定失敗，請確認設定值後再試一次", "上下限值設定錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                     else
                     {
-                        MessageBox.Show("參數錯誤，請確認輸入");
+                        MessageBox.Show("上下限值錯誤，請確認輸入為數字", "上下限值錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
                 });

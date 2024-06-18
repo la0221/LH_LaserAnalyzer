@@ -118,13 +118,13 @@ namespace LH_LaserAnalyzer
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(232, 47);
             this.label10.TabIndex = 52;
-            this.label10.Text = "串口";
+            this.label10.Text = "序列埠";
             this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // exp2csv_btn
             // 
             this.exp2csv_btn.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.exp2csv_btn.Location = new System.Drawing.Point(1336, 469);
+            this.exp2csv_btn.Location = new System.Drawing.Point(1335, 469);
             this.exp2csv_btn.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.exp2csv_btn.Name = "exp2csv_btn";
             this.exp2csv_btn.Size = new System.Drawing.Size(411, 71);
@@ -136,7 +136,7 @@ namespace LH_LaserAnalyzer
             // clear_tb_btn
             // 
             this.clear_tb_btn.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.clear_tb_btn.Location = new System.Drawing.Point(1337, 786);
+            this.clear_tb_btn.Location = new System.Drawing.Point(1335, 786);
             this.clear_tb_btn.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.clear_tb_btn.Name = "clear_tb_btn";
             this.clear_tb_btn.Size = new System.Drawing.Size(411, 71);
@@ -215,7 +215,7 @@ namespace LH_LaserAnalyzer
             // NewResult_btn
             // 
             this.NewResult_btn.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.NewResult_btn.Location = new System.Drawing.Point(1337, 547);
+            this.NewResult_btn.Location = new System.Drawing.Point(1335, 547);
             this.NewResult_btn.Name = "NewResult_btn";
             this.NewResult_btn.Size = new System.Drawing.Size(410, 60);
             this.NewResult_btn.TabIndex = 14;
