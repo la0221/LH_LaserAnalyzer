@@ -467,7 +467,7 @@ namespace LH_LaserAnalyzer
                 return;
             }
 
-            string fn = $"{LicensePlate_tb.Text}_{DateTime.Now.ToString("yyyyMMdd")}.csv";
+            string fn = $"{LicensePlate_tb.Text}_{DateTime.Now.ToString("MMddHHmm")}.csv";
             SaveFileDialog saveCSV = new SaveFileDialog();
             //saveCSV.Filter = "Textfile|*.txt|Comma-Separated Values|*.csv";
             saveCSV.Filter = "Comma-Separated Values|*.csv";
@@ -479,7 +479,7 @@ namespace LH_LaserAnalyzer
             //saveCSV.ShowDialog();
             if (saveCSV.ShowDialog() == DialogResult.OK)
             {
-                System.IO.StreamWriter streamWriter = new System.IO.StreamWriter(saveCSV.FileName);
+                StreamWriter streamWriter = new StreamWriter(saveCSV.FileName);
                 switch (saveCSV.FilterIndex)
                 {
                     case 1:
