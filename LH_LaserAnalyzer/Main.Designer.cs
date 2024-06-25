@@ -66,6 +66,7 @@ namespace LH_LaserAnalyzer
             this.label11 = new System.Windows.Forms.Label();
             this.Department_tb = new System.Windows.Forms.TextBox();
             this.ImportCSV_btn = new System.Windows.Forms.Button();
+            this.LaserCali_btn = new System.Windows.Forms.Button();
             this.groupBox10.SuspendLayout();
             this.debug_gb.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -481,12 +482,26 @@ namespace LH_LaserAnalyzer
             this.ImportCSV_btn.UseVisualStyleBackColor = true;
             this.ImportCSV_btn.Click += new System.EventHandler(this.ImportCSV_btn_Click);
             // 
+            // LaserCali_btn
+            // 
+            this.LaserCali_btn.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.LaserCali_btn.ForeColor = System.Drawing.Color.Red;
+            this.LaserCali_btn.Location = new System.Drawing.Point(1335, 719);
+            this.LaserCali_btn.Name = "LaserCali_btn";
+            this.LaserCali_btn.Size = new System.Drawing.Size(410, 60);
+            this.LaserCali_btn.TabIndex = 14;
+            this.LaserCali_btn.Text = "校正";
+            this.LaserCali_btn.UseVisualStyleBackColor = true;
+            this.LaserCali_btn.Visible = false;
+            this.LaserCali_btn.Click += new System.EventHandler(this.LaserCali_btn_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(1760, 866);
+            this.Controls.Add(this.LaserCali_btn);
             this.Controls.Add(this.NewResult_btn);
             this.Controls.Add(this.StopRead_button);
             this.Controls.Add(this.BuzzOff_button);
@@ -558,6 +573,7 @@ namespace LH_LaserAnalyzer
         private System.Windows.Forms.Button NewResult_btn;
         private System.Windows.Forms.Button ImportCSV_btn;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Button LaserCali_btn;
     }
 }
 

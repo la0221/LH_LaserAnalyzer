@@ -84,11 +84,15 @@ namespace LH_LaserAnalyzer
             {
                 if (!LaserDevice_Port.IsOpen)
                 {
-                    MessageBox.Show("設備尚未連接", "連線錯誤");
+                    MessageBox.Show("設備尚未連接", "連線錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-                MessageBoxButtons buttons = MessageBoxButtons.YesNo;
-                DialogResult result = MessageBox.Show("是否執行雷射表頭校正？", "雷射表頭校正", buttons);
+                if (SensorProcess_idx != -2)
+                {
+                    MessageBox.Show("請先停止量測再進行校正", "校正錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+
+                DialogResult result = MessageBox.Show("是否執行雷射表頭校正？", "雷射表頭校正", MessageBoxButtons.YesNo);
                 if (result == DialogResult.Yes)
                 {
                     Thread Cali_Thread = new Thread(delegate ()
@@ -96,7 +100,7 @@ namespace LH_LaserAnalyzer
                         CalibrationProcess();
                     });
                     Cali_Thread.Start();
-                }               
+                }
                 return;
             }
 
@@ -411,8 +415,8 @@ namespace LH_LaserAnalyzer
                         if (float.TryParse(Min, out float min) && min < 0 && min > -15.5)
                         {   
                             string min_v = min.ToString("F2");
-                            Debug.WriteLine($"Min Value: {min_v}");
-                            rcv_tb.AppendText($"Min: {min_v}\r\n");
+                            Debug.WriteLine($"校正負值: {min_v}");
+                            rcv_tb.AppendText($"校正負值: {min_v}\r\n");
                             SerialSend(LaserDevice_Port, min_v);
                             Cali_idx = CALI_WAIT;
                         }
@@ -439,8 +443,8 @@ namespace LH_LaserAnalyzer
                         if (float.TryParse(Max, out float max) && max > 0 && max < 15.5)
                         {
                             string max_v = max.ToString("F2");
-                            Debug.WriteLine($"Max Value: {max_v}");
-                            rcv_tb.AppendText($"Max: {max}\r\n");
+                            Debug.WriteLine($"校正正值: {max_v}");
+                            rcv_tb.AppendText($"校正正值: {max}\r\n");
                             SerialSend(LaserDevice_Port, max_v);
                             Cali_idx = CALI_WAIT;
                         }
@@ -871,6 +875,34 @@ namespace LH_LaserAnalyzer
                     }
                 });
                 SetLimit.Start();
+            }
+        }
+
+        private void LaserCali_btn_Click(object sender, EventArgs e)
+        {
+            // 若當前為未量測狀態
+            if (SensorProcess_idx != -2)
+            {
+                MessageBox.Show("請先停止量測再進行校正", "校正錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else
+            { 
+                if (!LaserDevice_Port.IsOpen)
+                {
+                    MessageBox.Show("設備尚未連接", "連線錯誤");
+                    return;
+                }
+                MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+                DialogResult result = MessageBox.Show("是否執行雷射表頭校正？", "雷射表頭校正", buttons);
+                if (result == DialogResult.Yes)
+                {
+                    Thread Cali_Thread = new Thread(delegate ()
+                    {
+                        CalibrationProcess();
+                    });
+                    Cali_Thread.Start();
+                }
+                return;
             }
         }
     }
