@@ -49,7 +49,6 @@ namespace LH_LaserAnalyzer
         private bool CheckUpdate_Low = false;
         private bool UpdateCompleteUp = false;
         private bool UpdateCompleteLow = false;
-        private bool TestDone = false;
         private Form result = null; // Not in use
 
         // 雷射校正
@@ -89,10 +88,10 @@ namespace LH_LaserAnalyzer
                 }
                 if (SensorProcess_idx != -2)
                 {
-                    MessageBox.Show("請先停止量測再進行校正", "校正錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("請先停止量測再進行校正", "雷射感測器校正", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
-                DialogResult result = MessageBox.Show("是否執行雷射表頭校正？", "雷射表頭校正", MessageBoxButtons.YesNo);
+                DialogResult result = MessageBox.Show("是否執行雷射感測器校正？", "雷射感測器校正", MessageBoxButtons.YesNo);
                 if (result == DialogResult.Yes)
                 {
                     Thread Cali_Thread = new Thread(delegate ()
@@ -299,17 +298,6 @@ namespace LH_LaserAnalyzer
             {
                 case -2:    //  Standby
                     Debug.WriteLine("SensorProcess(): Standby");
-                    //if (TestDone)
-                    //{
-                    //    Thread GetResult = new Thread(delegate ()
-                    //    {
-                    //        result = new Result(Department_tb.Text, LicensePlate_tb.Text, ProjectNo_tb.Text, StartPlace_tb.Text, Uplimit_tb.Text, Downlimit_tb.Text, rcv_tb.Text);
-                    //        result.Show();
-                    //    });
-                    //    GetResult.SetApartmentState(ApartmentState.STA);
-                    //    GetResult.Start();
-                    //}
-                    //SensorProcess_idx 
                     break;
 
                 case -1:    //  偵測到第一Sensor
@@ -342,8 +330,6 @@ namespace LH_LaserAnalyzer
                         SensorState = -1;
                         SensorProcess_idx = -2;
                         TestState_lb.Text = "量測結束";
-
-                        TestDone = true;                        
                     }
                     break;
 
@@ -366,13 +352,13 @@ namespace LH_LaserAnalyzer
                 {
                     case CALI_FAIL:
                         Debug.WriteLine("Calibration Process: CALI_FAIL");
-                        TestState_lb.Text = "雷射表頭校正失敗";
-                        MessageBox.Show("雷射表頭校正失敗，請重啟設備後再進行校正");
+                        TestState_lb.Text = "雷射感測器校正失敗";
+                        MessageBox.Show("雷射感測器校正失敗，請重啟設備後再進行校正", "雷射感測器校正", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
 
                     case CALI_START:
                         Debug.WriteLine("Calibration Process: CALI_START");
-                        TestState_lb.Text = "雷射表頭校正中";
+                        TestState_lb.Text = "雷射感測器校正中";
                         SerialSend(LaserDevice_Port, "cali");
                         Cali_idx = CALI_WAIT;
                         break;
@@ -402,13 +388,13 @@ namespace LH_LaserAnalyzer
                     // 雷射校正 最小值
                     case CALI_MIN:
                         Debug.WriteLine("Calibration Process: CALI_MIN");
-                        string Min = Interaction.InputBox("請將雷射表頭移動至小於0之位置，待穩定後輸入表頭上顯示之數值", "雷射表頭校正", "0", -1, -1);
-                        TestState_lb.Text = "雷射表頭負值校正中";
+                        string Min = Interaction.InputBox("請將雷射感測器移動至顯示小於0之位置，待穩定後輸入感測器上顯示之數值", "雷射感測器校正", "0", -1, -1);
+                        TestState_lb.Text = "雷射感測器負值校正中";
 
                         if(Min.Length <= 0)
                         {
                             Debug.WriteLine("Cancel");
-                            Cali_idx = -1;
+                            Cali_idx = CALI_FAIL;
                             break;
                         }
 
@@ -422,7 +408,7 @@ namespace LH_LaserAnalyzer
                         }
                         else
                         {
-                            MessageBox.Show("輸入錯誤，請重新輸入", "錯誤");
+                            MessageBox.Show("輸入數值錯誤，請重新輸入\r\n注意：數值需小於0且大於-15.5，", "雷射感測器校正", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
 
                         break;
@@ -430,13 +416,13 @@ namespace LH_LaserAnalyzer
                     // 雷射校正 最大值
                     case CALI_MAX:
                         Debug.WriteLine("Calibration Process: CALI_MAX");
-                        string Max = Interaction.InputBox("請將雷射表頭移動至大於0之位置，待穩定後輸入表頭上顯示之數值", "雷射表頭校正", "0", -1, -1);
-                        TestState_lb.Text = "雷射表頭正值校正中";
+                        string Max = Interaction.InputBox("請將雷射感測器移動至顯示大於0之位置，待穩定後輸入感測器上顯示之數值", "雷射感測器校正", "0", -1, -1);
+                        TestState_lb.Text = "雷射感測器正值校正中";
 
                         if (Max.Length <= 0)
                         {
                             Debug.WriteLine("Cancel");
-                            Cali_idx = -1;
+                            Cali_idx = CALI_FAIL;
                             break;
                         }
 
@@ -450,14 +436,14 @@ namespace LH_LaserAnalyzer
                         }
                         else
                         {
-                            MessageBox.Show("輸入錯誤，請重新輸入", "錯誤");
+                            MessageBox.Show("輸入錯誤，請重新輸入\r\n注意：數值需大於0且小於15.5", "雷射感測器校正", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
                         break;
                     
                     case CALI_DONE:
                         Debug.WriteLine("Calibration Process: CALI_DONE");
-                        MessageBox.Show("雷射表頭校正完成");
-                        TestState_lb.Text = "雷射表頭校正完成";
+                        MessageBox.Show("雷射感測器校正完成", "雷射感測器校正", MessageBoxButtons.OK);
+                        TestState_lb.Text = "雷射感測器校正完成";
                         return;
                 }
             }
@@ -589,7 +575,7 @@ namespace LH_LaserAnalyzer
                 {
                     if (u <= l)
                     {
-                        MessageBox.Show("上限值不可小於或等於下限值", "上下限值錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("上限值不可小於或等於下限值", "上下限設置", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
                     Uplimit_tb.Text = u.ToString("##0.00");
@@ -601,17 +587,17 @@ namespace LH_LaserAnalyzer
                     CheckUpdate_Low = true;
 
                     if(CheckLimitUpdate())
-                        MessageBox.Show("設定完成", "上下限值設定");
+                        MessageBox.Show("設定完成", "上下限設置");
                     else
-                        MessageBox.Show("設定失敗，請確認設定值後再試一次", "上下限值設定錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("設定失敗，請確認設定值後再試一次", "上下限設置", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
                 else
                 {
-                    MessageBox.Show("上下限值錯誤，請確認輸入為數字", "上下限值錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("上下限值錯誤，請確認輸入為數字", "上下限設置", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
             });
-            SetLimit.Start();
+            SetLimit.Start();                        
         }
 
         private bool CheckLimitUpdate()
@@ -716,7 +702,7 @@ namespace LH_LaserAnalyzer
                 catch (Exception ex)
                 {
                     rcv_tb.Clear();
-                    MessageBox.Show("匯入失敗，請確認檔案格式正確", "匯入錯誤", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show("匯入失敗，請確認檔案格式正確", "匯入錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     Debug.WriteLine(ex.Message);
                 }
             }
@@ -726,14 +712,14 @@ namespace LH_LaserAnalyzer
         {
             if (SensorProcess_idx ==-1 || SensorProcess_idx == 0 || SensorProcess_idx == 1)
             {
-                MessageBox.Show("量測中，請先停止量測", "量測結果錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("量測中，請先停止量測", "量測結果", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             float u, l;
             if (string.IsNullOrEmpty(rcv_tb.Text))
             {
-                MessageBox.Show("量測資料為空", "上下限值錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("量測資料為空", "量測結果", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             else if (string.IsNullOrEmpty(Uplimit_tb.Text) || string.IsNullOrEmpty(Downlimit_tb.Text))
@@ -851,7 +837,7 @@ namespace LH_LaserAnalyzer
                     {
                         if(u <= l)
                         {
-                            MessageBox.Show("上限值不可小於或等於下限值", "上下限值錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageBox.Show("上限值不可小於或等於下限值", "上下限設置", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             return;
                         }
 
@@ -864,13 +850,13 @@ namespace LH_LaserAnalyzer
                         CheckUpdate_Low = true;
 
                         if (CheckLimitUpdate())
-                            MessageBox.Show("設定完成", "上下限值設定");
+                            MessageBox.Show("設定完成", "上下限設置");
                         else
-                            MessageBox.Show("設定失敗，請確認設定值後再試一次", "上下限值設定錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageBox.Show("設定失敗，請確認設定值後再試一次", "上下限設置", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                     else
                     {
-                        MessageBox.Show("上下限值錯誤，請確認輸入為數字", "上下限值錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("上下限值錯誤，請確認輸入為數字", "上下限設置", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
                 });
@@ -883,17 +869,17 @@ namespace LH_LaserAnalyzer
             // 若當前為未量測狀態
             if (SensorProcess_idx != -2)
             {
-                MessageBox.Show("請先停止量測再進行校正", "校正錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("請先停止量測再進行校正", "雷射感測器校正", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             else
             { 
                 if (!LaserDevice_Port.IsOpen)
                 {
-                    MessageBox.Show("設備尚未連接", "連線錯誤");
+                    MessageBox.Show("設備尚未連接", "連線錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
                 MessageBoxButtons buttons = MessageBoxButtons.YesNo;
-                DialogResult result = MessageBox.Show("是否執行雷射表頭校正？", "雷射表頭校正", buttons);
+                DialogResult result = MessageBox.Show("是否執行雷射感測器校正？", "雷射感測器校正", buttons);
                 if (result == DialogResult.Yes)
                 {
                     Thread Cali_Thread = new Thread(delegate ()

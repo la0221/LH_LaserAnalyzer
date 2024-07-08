@@ -168,7 +168,7 @@ namespace LH_LaserAnalyzer
             this.debug_gb.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.debug_gb.Name = "debug_gb";
             this.debug_gb.Padding = new System.Windows.Forms.Padding(5, 4, 5, 4);
-            this.debug_gb.Size = new System.Drawing.Size(244, 62);
+            this.debug_gb.Size = new System.Drawing.Size(263, 57);
             this.debug_gb.TabIndex = 49;
             this.debug_gb.TabStop = false;
             this.debug_gb.Text = "DEBUG";
@@ -218,7 +218,7 @@ namespace LH_LaserAnalyzer
             this.NewResult_btn.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.NewResult_btn.Location = new System.Drawing.Point(1335, 547);
             this.NewResult_btn.Name = "NewResult_btn";
-            this.NewResult_btn.Size = new System.Drawing.Size(410, 60);
+            this.NewResult_btn.Size = new System.Drawing.Size(411, 71);
             this.NewResult_btn.TabIndex = 14;
             this.NewResult_btn.Text = "量測結果";
             this.NewResult_btn.UseVisualStyleBackColor = true;
@@ -231,7 +231,7 @@ namespace LH_LaserAnalyzer
             this.StopRead_button.Location = new System.Drawing.Point(1335, 232);
             this.StopRead_button.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.StopRead_button.Name = "StopRead_button";
-            this.StopRead_button.Size = new System.Drawing.Size(412, 71);
+            this.StopRead_button.Size = new System.Drawing.Size(411, 71);
             this.StopRead_button.TabIndex = 10;
             this.StopRead_button.Text = "停止量測";
             this.StopRead_button.UseVisualStyleBackColor = true;
@@ -486,11 +486,11 @@ namespace LH_LaserAnalyzer
             // 
             this.LaserCali_btn.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.LaserCali_btn.ForeColor = System.Drawing.Color.Red;
-            this.LaserCali_btn.Location = new System.Drawing.Point(1335, 719);
+            this.LaserCali_btn.Location = new System.Drawing.Point(1335, 706);
             this.LaserCali_btn.Name = "LaserCali_btn";
-            this.LaserCali_btn.Size = new System.Drawing.Size(410, 60);
+            this.LaserCali_btn.Size = new System.Drawing.Size(411, 71);
             this.LaserCali_btn.TabIndex = 14;
-            this.LaserCali_btn.Text = "校正";
+            this.LaserCali_btn.Text = "雷射感測器校正";
             this.LaserCali_btn.UseVisualStyleBackColor = true;
             this.LaserCali_btn.Visible = false;
             this.LaserCali_btn.Click += new System.EventHandler(this.LaserCali_btn_Click);
