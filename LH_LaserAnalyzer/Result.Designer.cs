@@ -56,6 +56,9 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.textBox4 = new System.Windows.Forms.TextBox();
             this.label = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.Result_dgv)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
@@ -327,117 +330,124 @@
             // 
             // tableLayoutPanel2
             // 
-            this.tableLayoutPanel2.BackColor = System.Drawing.SystemColors.Window;
             this.tableLayoutPanel2.ColumnCount = 6;
+            this.tableLayoutPanel2.ColumnStyles.Clear();
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
-            this.tableLayoutPanel2.Controls.Add(this.label7, 5, 1);
-            this.tableLayoutPanel2.Controls.Add(this.label6, 4, 1);
-            this.tableLayoutPanel2.Controls.Add(this.label4, 3, 1);
-            this.tableLayoutPanel2.Controls.Add(this.label3, 2, 1);
-            this.tableLayoutPanel2.Controls.Add(this.label2, 1, 1);
-            this.tableLayoutPanel2.Controls.Add(this.textBox1, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.label, 0, 1);
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(15, 2070);
+
+            this.tableLayoutPanel2.RowCount = 4;
+            this.tableLayoutPanel2.RowStyles.Clear();
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 23F)); // 0：上排左/右
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 23F)); // 1：下排左/右
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 11F)); // 2：表頭
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 43F)); // 3：簽名空白
+
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(7, 1035);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 2;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 70F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 30F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(3265, 313);
-            this.tableLayoutPanel2.TabIndex = 5;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label7.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label7.Location = new System.Drawing.Point(2723, 219);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(539, 94);
-            this.label7.TabIndex = 12;
-            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label6.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label6.Location = new System.Drawing.Point(2179, 219);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(538, 94);
-            this.label6.TabIndex = 11;
-            this.label6.Text = "測試人員";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label4.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label4.Location = new System.Drawing.Point(1635, 219);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(538, 94);
-            this.label4.TabIndex = 10;
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label3.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label3.Location = new System.Drawing.Point(1091, 219);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(538, 94);
-            this.label3.TabIndex = 9;
-            this.label3.Text = "主管簽核";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label2.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label2.Location = new System.Drawing.Point(547, 219);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(538, 94);
-            this.label2.TabIndex = 8;
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // textBox1
-            // 
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(1509, 500);
+            this.tableLayoutPanel2.BackColor = System.Drawing.SystemColors.Window;
+
+            // ===== 2*2 文字表格 =========
+            // textBox1 =>  檢查發現危害、分析危害因素
             this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tableLayoutPanel2.SetColumnSpan(this.textBox1, 6);
-            this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox1.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.textBox1.Location = new System.Drawing.Point(3, 3);
             this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(3259, 213);
-            this.textBox1.TabIndex = 0;
-            this.textBox1.Text = "測試報告：";
-            // 
-            // label
-            // 
-            this.label.AutoSize = true;
+            this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBox1.Font = new System.Drawing.Font("標楷體", 14F);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(0);
+            this.textBox1.Text = "\r檢查發現危害、分析危害因素：";
+            this.tableLayoutPanel2.Controls.Add(this.textBox1, 0, 0);
+            this.tableLayoutPanel2.SetColumnSpan(this.textBox1, 3);
+
+            // textBox2 => 評估危害風險(嚴重性及可能性分析)
+            this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBox2.Multiline = true;
+            this.textBox2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBox2.Font = new System.Drawing.Font("標楷體", 14F);
+            this.textBox2.Margin = new System.Windows.Forms.Padding(0);
+            this.textBox2.Text = "\r評估危害風險(嚴重性及可能性分析)：";
+            this.tableLayoutPanel2.Controls.Add(this.textBox2, 3, 0);
+            this.tableLayoutPanel2.SetColumnSpan(this.textBox2, 3);
+
+            // textBox3 => 評估結果改善措施
+            this.textBox3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBox3.Multiline = true;
+            this.textBox3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBox3.Font = new System.Drawing.Font("標楷體", 14F);
+            this.textBox3.Margin = new System.Windows.Forms.Padding(0);
+            this.textBox3.Text = "\r評估結果改善措施：";
+            this.tableLayoutPanel2.Controls.Add(this.textBox3, 0, 1);
+            this.tableLayoutPanel2.SetColumnSpan(this.textBox3, 3);
+
+            // textBox4 => 檢討改善措施之合宜性
+            this.textBox4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBox4.Multiline = true;
+            this.textBox4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBox4.Font = new System.Drawing.Font("標楷體", 14F);
+            this.textBox4.Margin = new System.Windows.Forms.Padding(0);
+            this.textBox4.Text = "\r檢討改善措施之合宜性：";
+            this.tableLayoutPanel2.Controls.Add(this.textBox4, 3, 1);
+            this.tableLayoutPanel2.SetColumnSpan(this.textBox4, 3);
+
+            // ===== 簽名表格 =========
+            // 第 2 列 => column name
             this.label.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label.Location = new System.Drawing.Point(3, 219);
-            this.label.Name = "label";
-            this.label.Size = new System.Drawing.Size(538, 94);
-            this.label.TabIndex = 7;
-            this.label.Text = "核准";
+            this.label.Font = new System.Drawing.Font("標楷體", 20F);
             this.label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label.Margin = new System.Windows.Forms.Padding(0);
+            this.label.Text = "檢查單位";
+            this.tableLayoutPanel2.Controls.Add(this.label, 0, 2);
+            this.tableLayoutPanel2.SetColumnSpan(this.label, 2);
+
+            this.label3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label3.Font = new System.Drawing.Font("標楷體", 20F);
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label3.Margin = new System.Windows.Forms.Padding(0);
+            this.label3.Text = "檢查單位主管";
+            this.tableLayoutPanel2.Controls.Add(this.label3, 2, 2);
+            this.tableLayoutPanel2.SetColumnSpan(this.label3, 2);
+
+            this.label6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label6.Font = new System.Drawing.Font("標楷體", 20F);
+            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label6.Margin = new System.Windows.Forms.Padding(0);
+            this.label6.Text = "檢查人員";
+            this.tableLayoutPanel2.Controls.Add(this.label6, 4, 2);
+            this.tableLayoutPanel2.SetColumnSpan(this.label6, 2);
+
+            // 第 3 列 => 簽名空白列
+            this.label2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label2.Font = new System.Drawing.Font("微軟正黑體", 13.875F);
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label2.Margin = new System.Windows.Forms.Padding(0);
+            this.label2.Text = "";
+            this.tableLayoutPanel2.Controls.Add(this.label2, 0, 3);
+            this.tableLayoutPanel2.SetColumnSpan(this.label2, 2);
+
+            this.label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label4.Font = new System.Drawing.Font("微軟正黑體", 13.875F);
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label4.Margin = new System.Windows.Forms.Padding(0);
+            this.label4.Text = "";
+            this.tableLayoutPanel2.Controls.Add(this.label4, 2, 3);
+            this.tableLayoutPanel2.SetColumnSpan(this.label4, 2);
+
+            this.label7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label7.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label7.Font = new System.Drawing.Font("微軟正黑體", 13.875F);
+            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label7.Margin = new System.Windows.Forms.Padding(0);
+            this.label7.Text = "";
+            this.tableLayoutPanel2.Controls.Add(this.label7, 4, 3);
+            this.tableLayoutPanel2.SetColumnSpan(this.label7, 2);
             // 
             // Result
             // 
@@ -487,6 +497,9 @@
         private System.Windows.Forms.Label StartPlace_lb;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.Label label;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;

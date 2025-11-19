@@ -53,7 +53,7 @@ namespace LH_LaserAnalyzer
             //    TestTime_lb.Text = $"{DT1[0]}\r\n~{DT1[DT1.Count - 1]}";
 
             // Initialize the DataGridView
-            Result_dgv.Rows.Add(3);            
+            Result_dgv.Rows.Add(4);            
             Result_dgv.Rows[0].Cells[0].Value = "S1";
             Result_dgv.Rows[1].Cells[0].Value = "S2";
             Result_dgv.Rows[2].Cells[0].Value = "S3";
@@ -67,6 +67,12 @@ namespace LH_LaserAnalyzer
                     
             // 檢查測試結果
             CheckAll_OKNG();
+
+            // 填入量測平均值到
+            Result_dgv.Rows[0].Cells[3].Value = CalcAverage(S1_value);
+            Result_dgv.Rows[1].Cells[3].Value = CalcAverage(S2_value);
+            Result_dgv.Rows[2].Cells[3].Value = CalcAverage(S3_value);
+            Result_dgv.Rows[3].Cells[3].Value = CalcAverage(S4_value);
 
             // Auto resize rows and columns of the DataGridView
             Result_dgv.AutoResizeRows();
@@ -152,6 +158,7 @@ namespace LH_LaserAnalyzer
             chart.Series.Add(new Series());
             chart.ChartAreas.Add(new ChartArea());
             Series series = chart.Series[0];
+            series.BorderWidth = 3;
             series.ChartType = SeriesChartType.Line;
             series.XValueType = ChartValueType.DateTime;
             chart.ChartAreas[0].AxisX.MajorGrid.LineDashStyle = ChartDashStyle.Dash; // X軸網格線樣式 20240410
@@ -347,9 +354,38 @@ namespace LH_LaserAnalyzer
             this.Dispose();            
         }
 
+        private string CalcAverage(List<float> values)
+        {
+            // 沒資料就顯示 NA
+            if (values == null || values.Count == 0)
+                return "NA";
+
+            double sum = 0;
+            int count = 0;
+            foreach (var v in values)
+            {
+                // 忽略錯誤值 / 無效量測值
+                if (v == -999f || v == 999f)
+                    continue;
+
+                sum += v;
+                count++;
+            }
+
+            // 如果有效值全部都是 -999 / 999 被排除掉，就顯示 NA
+            if (count == 0)
+                return "NA";
+
+            double avg = sum / count;
+
+            // 保留兩位小數，例如 0.12
+            return avg.ToString("0.00");
+        }
+
+
         private void CreatePDF()
         {
-            var doc = new Document(PageSize.A4, 0, 0 ,0 , 0); // size, left, right, top, bottom            
+            var doc = new Document(PageSize.A4, 10f, 10f, 5f, 5f); // size, left, right, top, bottom            
             string path = $@"{Environment.CurrentDirectory}\Result\{LicensePlate_lb.Text}_{DateTime.Now.ToString("MMddHHmm")}.pdf";
 
             // 檢查是否有想同檔名檔案
@@ -371,11 +407,13 @@ namespace LH_LaserAnalyzer
 
             // 字體設定
             BaseFont  ChBf = BaseFont.CreateFont(@"C:\Windows\Fonts\msjh.ttc,1", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED); // 微軟正黑體
-            iTextSharp.text.Font Ch_Title = new iTextSharp.text.Font(ChBf, 36, iTextSharp.text.Font.BOLD, BaseColor.BLACK);
+            iTextSharp.text.Font Ch_Title = new iTextSharp.text.Font(ChBf, 30, iTextSharp.text.Font.NORMAL, BaseColor.BLACK);
             iTextSharp.text.Font Ch_Content = new iTextSharp.text.Font(ChBf, 10, iTextSharp.text.Font.NORMAL, BaseColor.BLACK);
+            iTextSharp.text.Font Ch_Content_Big = new iTextSharp.text.Font(ChBf, 30, iTextSharp.text.Font.NORMAL, BaseColor.BLACK);
+
             doc.Open();
             // 標題
-            Paragraph Title_pa = new Paragraph("聯合電訊工程行", Ch_Title);
+            Paragraph Title_pa = new Paragraph("旋轉盤間隙雷射測定儀報告", Ch_Title);
             Title_pa.Alignment = Element.ALIGN_CENTER;
 
             // 內容
@@ -386,13 +424,13 @@ namespace LH_LaserAnalyzer
             TestConent_tb.TotalWidth = 580f;
             TestConent_tb.HorizontalAlignment = Element.ALIGN_CENTER;
             //TestConent_tb.DefaultCell.Border = iTextSharp.text.Rectangle.NO_BORDER;
-            PdfPCell Dep = new PdfPCell(new Phrase("單位：", Ch_Content));
+            PdfPCell Dep = new PdfPCell(new Phrase("設置單位：", Ch_Content));
             PdfPCell _Dep = new PdfPCell(new Phrase(Department_lb.Text, Ch_Content));
-            PdfPCell Lic_Plate = new PdfPCell(new Phrase("車號：", Ch_Content));
+            PdfPCell Lic_Plate = new PdfPCell(new Phrase("鋼印號碼：", Ch_Content));
             PdfPCell _Lic_Plate = new PdfPCell(new Phrase(LicensePlate_lb.Text, Ch_Content));
-            PdfPCell ProjNo = new PdfPCell(new Phrase("工程文號：", Ch_Content));
+            PdfPCell ProjNo = new PdfPCell(new Phrase("檢查編號：", Ch_Content));
             PdfPCell _ProjNo = new PdfPCell(new Phrase(ProjectNum_lb.Text, Ch_Content));
-            PdfPCell Test_St = new PdfPCell(new Phrase("測試起點：", Ch_Content));
+            PdfPCell Test_St = new PdfPCell(new Phrase("檢測人員：", Ch_Content));
             PdfPCell _Test_St = new PdfPCell(new Phrase(StartPlace_lb.Text, Ch_Content));
             PdfPCell UD_Li = new PdfPCell(new Phrase("上限值：\r\n下限值：", Ch_Content));
             PdfPCell _UD_Li = new PdfPCell(new Phrase(UpDownLimit_lb.Text, Ch_Content));
@@ -457,7 +495,7 @@ namespace LH_LaserAnalyzer
             PdfPCell C1 = new PdfPCell(new Phrase("感測區域", Ch_Content));
             PdfPCell C2 =new PdfPCell(new Phrase("圖示(單位mm)", Ch_Content));
             PdfPCell C3 = new PdfPCell(new Phrase("測試結果", Ch_Content));
-            PdfPCell C4 = new PdfPCell(new Phrase("確認工程師", Ch_Content));
+            PdfPCell C4 = new PdfPCell(new Phrase("量測平均值（ｍｍ）", Ch_Content));
             PdfPCell S1 = new PdfPCell(new Phrase("S1", Ch_Content));
             PdfPCell S2 = new PdfPCell(new Phrase("S2", Ch_Content));
             PdfPCell S3 = new PdfPCell(new Phrase("S3", Ch_Content));
@@ -471,6 +509,22 @@ namespace LH_LaserAnalyzer
             PdfPCell R2 = new PdfPCell(new Phrase(Result_dgv.Rows[1].Cells[2].Value.ToString(), Ch_Content));
             PdfPCell R3 = new PdfPCell(new Phrase(Result_dgv.Rows[2].Cells[2].Value.ToString(), Ch_Content));
             PdfPCell R4 = new PdfPCell(new Phrase(Result_dgv.Rows[3].Cells[2].Value.ToString(), Ch_Content));
+
+            // 量測平均值欄位
+            PdfPCell A1 = new PdfPCell(new Phrase(CalcAverage(S1_value), Ch_Content));
+            PdfPCell A2 = new PdfPCell(new Phrase(CalcAverage(S2_value), Ch_Content));
+            PdfPCell A3 = new PdfPCell(new Phrase(CalcAverage(S3_value), Ch_Content));
+            PdfPCell A4 = new PdfPCell(new Phrase(CalcAverage(S4_value), Ch_Content));
+
+            A1.HorizontalAlignment = Element.ALIGN_CENTER;
+            A2.HorizontalAlignment = Element.ALIGN_CENTER;
+            A3.HorizontalAlignment = Element.ALIGN_CENTER;
+            A4.HorizontalAlignment = Element.ALIGN_CENTER;
+            A1.VerticalAlignment = Element.ALIGN_MIDDLE;
+            A2.VerticalAlignment = Element.ALIGN_MIDDLE;
+            A3.VerticalAlignment = Element.ALIGN_MIDDLE;
+            A4.VerticalAlignment = Element.ALIGN_MIDDLE;
+
             C1.HorizontalAlignment = Element.ALIGN_CENTER;
             C2.HorizontalAlignment = Element.ALIGN_CENTER;
             C3.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -503,62 +557,106 @@ namespace LH_LaserAnalyzer
             R2.VerticalAlignment = Element.ALIGN_MIDDLE;
             R3.VerticalAlignment = Element.ALIGN_MIDDLE;
             R4.VerticalAlignment = Element.ALIGN_MIDDLE;
-
+            
             Result_tb.AddCell(C1);
             Result_tb.AddCell(C2);
             Result_tb.AddCell(C3);
             Result_tb.AddCell(C4);
+
             Result_tb.AddCell(S1);
             Result_tb.AddCell(P1);
             Result_tb.AddCell(R1);
-            Result_tb.AddCell(" ");
+            Result_tb.AddCell(A1);
+
             Result_tb.AddCell(S2);
             Result_tb.AddCell(P2);
-            Result_tb.AddCell(R2);                
-            Result_tb.AddCell(" ");
+            Result_tb.AddCell(R2);
+            Result_tb.AddCell(A2);
+
             Result_tb.AddCell(S3);
             Result_tb.AddCell(P3);
             Result_tb.AddCell(R3);
-            Result_tb.AddCell(" ");
+            Result_tb.AddCell(A3);
+
             Result_tb.AddCell(S4);
             Result_tb.AddCell(P4);
             Result_tb.AddCell(R4);
-            Result_tb.AddCell(" ");
+            Result_tb.AddCell(A4);
 
-            // 測試人員簽名
-            PdfPTable Sign_tb =new PdfPTable(6);
+
+            // ===== 2*2 文字表格 =========
+            PdfPTable Hazard_tb = new PdfPTable(new float[] { 1f, 1f });
+            Hazard_tb.LockedWidth = true;
+            Hazard_tb.TotalWidth = 580f;
+            Hazard_tb.HorizontalAlignment = Element.ALIGN_CENTER;
+
+            PdfPCell H1 = new PdfPCell(new Phrase("檢查發現危害、分析危害因素：\n\n\n\n", Ch_Content));
+            PdfPCell H2 = new PdfPCell(new Phrase("評估危害風險(嚴重性及可能性分析)：\n\n\n\n", Ch_Content));
+            PdfPCell H3 = new PdfPCell(new Phrase("評估結果改善措施：\n\n\n\n", Ch_Content));
+            PdfPCell H4 = new PdfPCell(new Phrase("檢討改善措施之合宜性：\n\n\n\n", Ch_Content));
+
+            H1.HorizontalAlignment = Element.ALIGN_LEFT;
+            H2.HorizontalAlignment = Element.ALIGN_LEFT;
+            H3.HorizontalAlignment = Element.ALIGN_LEFT;
+            H4.HorizontalAlignment = Element.ALIGN_LEFT;
+
+            H1.VerticalAlignment = Element.ALIGN_TOP;
+            H2.VerticalAlignment = Element.ALIGN_TOP;
+            H3.VerticalAlignment = Element.ALIGN_TOP;
+            H4.VerticalAlignment = Element.ALIGN_TOP;
+
+            Hazard_tb.AddCell(H1);
+            Hazard_tb.AddCell(H2);
+            Hazard_tb.AddCell(H3);
+            Hazard_tb.AddCell(H4);
+
+            // ===== 簽名表格 =========
+            PdfPTable Sign_tb = new PdfPTable(new float[] { 2f, 2f, 2f });
             Sign_tb.LockedWidth = true;
             Sign_tb.TotalWidth = 580f;
-            PdfPCell testreport = new PdfPCell(new Phrase("測試報告：\n\n\n\n\n", Ch_Content));
-            testreport.Colspan = 6;
-            testreport.Rowspan = 5;
-            testreport.HorizontalAlignment = Element.ALIGN_LEFT;
-            testreport.VerticalAlignment = Element.ALIGN_TOP;
-            PdfPCell approve = new PdfPCell(new Phrase("核准：", Ch_Content));
-            PdfPCell super_sign = new PdfPCell(new Phrase("主管簽核：", Ch_Content));
-            PdfPCell tester = new PdfPCell(new Phrase("測試人員：", Ch_Content));
-            approve.HorizontalAlignment = Element.ALIGN_CENTER;
-            super_sign.HorizontalAlignment = Element.ALIGN_CENTER;
-            tester.HorizontalAlignment = Element.ALIGN_CENTER;
-            Sign_tb.AddCell(testreport);            
-            Sign_tb.AddCell(approve);
-            Sign_tb.AddCell(" ");
-            Sign_tb.AddCell(super_sign);
-            Sign_tb.AddCell(" ");
-            Sign_tb.AddCell(tester);
-            Sign_tb.AddCell(" ");
+            Sign_tb.HorizontalAlignment = Element.ALIGN_CENTER;
 
-            // 將所有表格加入內容
+            // 第 2 列 => column name
+            PdfPCell Sig1 = new PdfPCell(new Phrase("檢查單位", Ch_Content_Big));
+            PdfPCell Sig2 = new PdfPCell(new Phrase("檢查單位主管", Ch_Content_Big));
+            PdfPCell Sig3 = new PdfPCell(new Phrase("檢查人員", Ch_Content_Big));
+
+            Sig1.HorizontalAlignment = Element.ALIGN_CENTER;
+            Sig2.HorizontalAlignment = Element.ALIGN_CENTER;
+            Sig3.HorizontalAlignment = Element.ALIGN_CENTER;
+            Sig1.VerticalAlignment = Element.ALIGN_MIDDLE;
+            Sig2.VerticalAlignment = Element.ALIGN_MIDDLE;
+            Sig3.VerticalAlignment = Element.ALIGN_MIDDLE;
+
+            Sign_tb.AddCell(Sig1);
+            Sign_tb.AddCell(Sig2);
+            Sign_tb.AddCell(Sig3);
+
+            // 第 3 列 => 簽名空白列
+            PdfPCell Sig1Blank = new PdfPCell(new Phrase(" ", Ch_Content));
+            PdfPCell Sig2Blank = new PdfPCell(new Phrase(" ", Ch_Content));
+            PdfPCell Sig3Blank = new PdfPCell(new Phrase(" ", Ch_Content));
+
+            Sig1Blank.FixedHeight = 120f;
+            Sig2Blank.FixedHeight = 120f;
+            Sig3Blank.FixedHeight = 120f;
+
+            Sign_tb.AddCell(Sig1Blank);
+            Sign_tb.AddCell(Sig2Blank);
+            Sign_tb.AddCell(Sig3Blank);
+
             Content_pa.Add("\r\n");
             Content_pa.Add(TestConent_tb);
             Content_pa.Add("\r\n");
             Content_pa.Add(Result_tb);
             Content_pa.Add("\r\n");
-            Content_pa.Add(Sign_tb);
+            Content_pa.Add(Hazard_tb);   
+            Content_pa.Add("\r\n");
+            Content_pa.Add(Sign_tb);     
 
             // 文件內容
             doc.AddTitle(LicensePlate_lb.Text + "雷射圓盤檢測報告"); 
-            doc.AddAuthor("聯合電訊工程行");
+            doc.AddAuthor("旋轉盤間隙雷射測定儀報告");
             doc.AddCreationDate();
 
             doc.Add(Title_pa);
@@ -578,7 +676,7 @@ namespace LH_LaserAnalyzer
         /// <param name="data"></param>
         public void CreatePDF_WithoutForm()
         {
-            var doc = new Document(PageSize.A4, 0, 0 ,0 , 0); // size, left, right, top, bottom            
+            var doc = new Document(PageSize.A4, 10f, 10f, 5f, 5f); // size, left, right, top, bottom            
             string path = $@"{Environment.CurrentDirectory}\Result\{LicensePlate_lb.Text}_{DateTime.Now.ToString("MMddHHmm")}.pdf";
 
             // 檢查是否有想同檔名檔案
@@ -600,11 +698,13 @@ namespace LH_LaserAnalyzer
 
             // 字體設定
             BaseFont  ChBf = BaseFont.CreateFont(@"C:\Windows\Fonts\msjh.ttc,1", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED); // 微軟正黑體
-            iTextSharp.text.Font Ch_Title = new iTextSharp.text.Font(ChBf, 36, iTextSharp.text.Font.BOLD, BaseColor.BLACK);
+            iTextSharp.text.Font Ch_Title = new iTextSharp.text.Font(ChBf, 36, iTextSharp.text.Font.NORMAL, BaseColor.BLACK);
             iTextSharp.text.Font Ch_Content = new iTextSharp.text.Font(ChBf, 10, iTextSharp.text.Font.NORMAL, BaseColor.BLACK);
+            iTextSharp.text.Font Ch_Content_Big = new iTextSharp.text.Font(ChBf,10,iTextSharp.text.Font.NORMAL, BaseColor.BLACK);
+
             doc.Open();
             // 標題
-            Paragraph Title_pa = new Paragraph("聯合電訊工程行", Ch_Title);
+            Paragraph Title_pa = new Paragraph("旋轉盤間隙雷射測定儀報告", Ch_Title);
             Title_pa.Alignment = Element.ALIGN_CENTER;
 
             // 內容
@@ -615,14 +715,14 @@ namespace LH_LaserAnalyzer
             TestConent_tb.TotalWidth = 580f;
             TestConent_tb.HorizontalAlignment = Element.ALIGN_CENTER;
             //TestConent_tb.DefaultCell.Border = iTextSharp.text.Rectangle.NO_BORDER;
-            PdfPCell Dep = new PdfPCell(new Phrase("單位：", Ch_Content));
-            PdfPCell _Dep = new PdfPCell(new Phrase(Department_lb.Text, Ch_Content));
-            PdfPCell Lic_Plate = new PdfPCell(new Phrase("車號：", Ch_Content));
-            PdfPCell _Lic_Plate = new PdfPCell(new Phrase(LicensePlate_lb.Text, Ch_Content));
-            PdfPCell ProjNo = new PdfPCell(new Phrase("工程文號：", Ch_Content));
-            PdfPCell _ProjNo = new PdfPCell(new Phrase(ProjectNum_lb.Text, Ch_Content));
-            PdfPCell Test_St = new PdfPCell(new Phrase("測試起點：", Ch_Content));
-            PdfPCell _Test_St = new PdfPCell(new Phrase(StartPlace_lb.Text, Ch_Content));
+            PdfPCell Dep = new PdfPCell(new Phrase("設置單位：", Ch_Content_Big));
+            PdfPCell _Dep = new PdfPCell(new Phrase(Department_lb.Text, Ch_Content_Big));
+            PdfPCell Lic_Plate = new PdfPCell(new Phrase("鋼印號碼：", Ch_Content_Big));
+            PdfPCell _Lic_Plate = new PdfPCell(new Phrase(LicensePlate_lb.Text, Ch_Content_Big));
+            PdfPCell ProjNo = new PdfPCell(new Phrase("檢查編號：", Ch_Content_Big));
+            PdfPCell _ProjNo = new PdfPCell(new Phrase(ProjectNum_lb.Text, Ch_Content_Big));
+            PdfPCell Test_St = new PdfPCell(new Phrase("檢測人員：", Ch_Content_Big));
+            PdfPCell _Test_St = new PdfPCell(new Phrase(StartPlace_lb.Text, Ch_Content_Big));
             PdfPCell UD_Li = new PdfPCell(new Phrase("上限值：\r\n下限值：", Ch_Content));
             PdfPCell _UD_Li = new PdfPCell(new Phrase(UpDownLimit_lb.Text, Ch_Content));
             PdfPCell Test_ti = new PdfPCell(new Phrase("量測時間：", Ch_Content));
@@ -686,11 +786,11 @@ namespace LH_LaserAnalyzer
             PdfPCell C1 = new PdfPCell(new Phrase("感測區域", Ch_Content));
             PdfPCell C2 =new PdfPCell(new Phrase("圖示(單位mm)", Ch_Content));
             PdfPCell C3 = new PdfPCell(new Phrase("測試結果", Ch_Content));
-            PdfPCell C4 = new PdfPCell(new Phrase("確認工程師", Ch_Content));
-            PdfPCell S1 = new PdfPCell(new Phrase("S1", Ch_Content));
-            PdfPCell S2 = new PdfPCell(new Phrase("S2", Ch_Content));
-            PdfPCell S3 = new PdfPCell(new Phrase("S3", Ch_Content));
-            PdfPCell S4 = new PdfPCell(new Phrase("S4", Ch_Content));
+            PdfPCell C4 = new PdfPCell(new Phrase("量測平均值（ｍｍ）", Ch_Content_Big));
+            PdfPCell S1 = new PdfPCell(new Phrase("S1", Ch_Content_Big));
+            PdfPCell S2 = new PdfPCell(new Phrase("S2", Ch_Content_Big));
+            PdfPCell S3 = new PdfPCell(new Phrase("S3", Ch_Content_Big));
+            PdfPCell S4 = new PdfPCell(new Phrase("S4", Ch_Content_Big));
 
             PdfPCell P1 = new PdfPCell(img[0], true);
             PdfPCell P2 = new PdfPCell(img[1], true);
@@ -700,6 +800,22 @@ namespace LH_LaserAnalyzer
             PdfPCell R2 = new PdfPCell(new Phrase(Result_dgv.Rows[1].Cells[2].Value.ToString(), Ch_Content));
             PdfPCell R3 = new PdfPCell(new Phrase(Result_dgv.Rows[2].Cells[2].Value.ToString(), Ch_Content));
             PdfPCell R4 = new PdfPCell(new Phrase(Result_dgv.Rows[3].Cells[2].Value.ToString(), Ch_Content));
+
+            // 量測平均值欄位
+            PdfPCell A1 = new PdfPCell(new Phrase(CalcAverage(S1_value), Ch_Content));
+            PdfPCell A2 = new PdfPCell(new Phrase(CalcAverage(S2_value), Ch_Content));
+            PdfPCell A3 = new PdfPCell(new Phrase(CalcAverage(S3_value), Ch_Content));
+            PdfPCell A4 = new PdfPCell(new Phrase(CalcAverage(S4_value), Ch_Content));
+
+            A1.HorizontalAlignment = Element.ALIGN_CENTER;
+            A2.HorizontalAlignment = Element.ALIGN_CENTER;
+            A3.HorizontalAlignment = Element.ALIGN_CENTER;
+            A4.HorizontalAlignment = Element.ALIGN_CENTER;
+            A1.VerticalAlignment = Element.ALIGN_MIDDLE;
+            A2.VerticalAlignment = Element.ALIGN_MIDDLE;
+            A3.VerticalAlignment = Element.ALIGN_MIDDLE;
+            A4.VerticalAlignment = Element.ALIGN_MIDDLE;
+
             C1.HorizontalAlignment = Element.ALIGN_CENTER;
             C2.HorizontalAlignment = Element.ALIGN_CENTER;
             C3.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -737,45 +853,90 @@ namespace LH_LaserAnalyzer
             Result_tb.AddCell(C2);
             Result_tb.AddCell(C3);
             Result_tb.AddCell(C4);
+
             Result_tb.AddCell(S1);
             Result_tb.AddCell(P1);
             Result_tb.AddCell(R1);
-            Result_tb.AddCell(" ");
+            Result_tb.AddCell(A1);
+
             Result_tb.AddCell(S2);
             Result_tb.AddCell(P2);
-            Result_tb.AddCell(R2);                
-            Result_tb.AddCell(" ");
+            Result_tb.AddCell(R2);
+            Result_tb.AddCell(A2);
+
             Result_tb.AddCell(S3);
             Result_tb.AddCell(P3);
             Result_tb.AddCell(R3);
-            Result_tb.AddCell(" ");
+            Result_tb.AddCell(A3);
+
             Result_tb.AddCell(S4);
             Result_tb.AddCell(P4);
             Result_tb.AddCell(R4);
-            Result_tb.AddCell(" ");
+            Result_tb.AddCell(A4);
 
-            // 測試人員簽名
-            PdfPTable Sign_tb =new PdfPTable(6);
+
+            // ===== 2*2 文字表格 =========
+            PdfPTable Hazard_tb = new PdfPTable(new float[] { 1f, 1f });
+            Hazard_tb.LockedWidth = true;
+            Hazard_tb.TotalWidth = 580f;
+            Hazard_tb.HorizontalAlignment = Element.ALIGN_CENTER;
+
+            PdfPCell H1 = new PdfPCell(new Phrase("檢查發現危害、分析危害因素：\n\n\n\n", Ch_Content));
+            PdfPCell H2 = new PdfPCell(new Phrase("評估危害風險(嚴重性及可能性分析)：\n\n\n\n", Ch_Content));
+            PdfPCell H3 = new PdfPCell(new Phrase("評估結果改善措施：\n\n\n\n", Ch_Content));
+            PdfPCell H4 = new PdfPCell(new Phrase("檢討改善措施之合宜性：\n\n\n\n", Ch_Content));
+
+            H1.HorizontalAlignment = Element.ALIGN_LEFT;
+            H2.HorizontalAlignment = Element.ALIGN_LEFT;
+            H3.HorizontalAlignment = Element.ALIGN_LEFT;
+            H4.HorizontalAlignment = Element.ALIGN_LEFT;
+
+            H1.VerticalAlignment = Element.ALIGN_TOP;
+            H2.VerticalAlignment = Element.ALIGN_TOP;
+            H3.VerticalAlignment = Element.ALIGN_TOP;
+            H4.VerticalAlignment = Element.ALIGN_TOP;
+
+            Hazard_tb.AddCell(H1);
+            Hazard_tb.AddCell(H2);
+            Hazard_tb.AddCell(H3);
+            Hazard_tb.AddCell(H4);
+
+            // ===== 簽名表格 =========
+            PdfPTable Sign_tb = new PdfPTable(new float[] { 2f, 2f, 2f });
             Sign_tb.LockedWidth = true;
             Sign_tb.TotalWidth = 580f;
-            PdfPCell testreport = new PdfPCell(new Phrase("測試報告：\n\n\n\n\n", Ch_Content));
-            testreport.Colspan = 6;
-            testreport.Rowspan = 5;
-            testreport.HorizontalAlignment = Element.ALIGN_LEFT;
-            testreport.VerticalAlignment = Element.ALIGN_TOP;
-            PdfPCell approve = new PdfPCell(new Phrase("核准：", Ch_Content));
-            PdfPCell super_sign = new PdfPCell(new Phrase("主管簽核：", Ch_Content));
-            PdfPCell tester = new PdfPCell(new Phrase("測試人員：", Ch_Content));
-            approve.HorizontalAlignment = Element.ALIGN_CENTER;
-            super_sign.HorizontalAlignment = Element.ALIGN_CENTER;
-            tester.HorizontalAlignment = Element.ALIGN_CENTER;
-            Sign_tb.AddCell(testreport);            
-            Sign_tb.AddCell(approve);
-            Sign_tb.AddCell(" ");
-            Sign_tb.AddCell(super_sign);
-            Sign_tb.AddCell(" ");
-            Sign_tb.AddCell(tester);
-            Sign_tb.AddCell(" ");
+            Sign_tb.HorizontalAlignment = Element.ALIGN_CENTER;
+
+            // 第 2 列 => column name
+            PdfPCell Sig1 = new PdfPCell(new Phrase("檢查單位", Ch_Content_Big));
+            PdfPCell Sig2 = new PdfPCell(new Phrase("檢查單位主管", Ch_Content_Big));
+            PdfPCell Sig3 = new PdfPCell(new Phrase("檢查人員", Ch_Content_Big));
+
+            Sig1.HorizontalAlignment = Element.ALIGN_CENTER;
+            Sig2.HorizontalAlignment = Element.ALIGN_CENTER;
+            Sig3.HorizontalAlignment = Element.ALIGN_CENTER;
+            Sig1.VerticalAlignment = Element.ALIGN_MIDDLE;
+            Sig2.VerticalAlignment = Element.ALIGN_MIDDLE;
+            Sig3.VerticalAlignment = Element.ALIGN_MIDDLE;
+
+            Sign_tb.AddCell(Sig1);
+            Sign_tb.AddCell(Sig2);
+            Sign_tb.AddCell(Sig3);
+
+            // 第 3 列 => 簽名空白列
+            PdfPCell Sig1Blank = new PdfPCell(new Phrase(" ", Ch_Content));
+            PdfPCell Sig2Blank = new PdfPCell(new Phrase(" ", Ch_Content));
+            PdfPCell Sig3Blank = new PdfPCell(new Phrase(" ", Ch_Content));
+
+            // 可以固定高度，讓格子長一點
+            Sig1Blank.FixedHeight = 120f;
+            Sig2Blank.FixedHeight = 120f;
+            Sig3Blank.FixedHeight = 120f;
+
+            Sign_tb.AddCell(Sig1Blank);
+            Sign_tb.AddCell(Sig2Blank);
+            Sign_tb.AddCell(Sig3Blank);
+
 
             // 將所有表格加入內容
             Content_pa.Add("\r\n");
@@ -783,11 +944,14 @@ namespace LH_LaserAnalyzer
             Content_pa.Add("\r\n");
             Content_pa.Add(Result_tb);
             Content_pa.Add("\r\n");
-            Content_pa.Add(Sign_tb);
+            Content_pa.Add(Hazard_tb);   // 新增 2×2 區塊
+            Content_pa.Add("\r\n");
+            Content_pa.Add(Sign_tb);     // 底下簽名表
+
 
             // 文件內容
             doc.AddTitle(LicensePlate_lb.Text + "雷射圓盤檢測報告"); 
-            doc.AddAuthor("聯合電訊工程行");
+            doc.AddAuthor("旋轉盤間隙雷射測定儀報告");
             doc.AddCreationDate();
 
             doc.Add(Title_pa);

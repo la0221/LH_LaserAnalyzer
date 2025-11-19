@@ -392,7 +392,7 @@ namespace LH_LaserAnalyzer
             this.groupBox4.Controls.Add(this.ProjectNo_tb);
             this.groupBox4.Controls.Add(this.label11);
             this.groupBox4.Controls.Add(this.Department_tb);
-            this.groupBox4.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.groupBox4.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.groupBox4.Location = new System.Drawing.Point(14, 153);
             this.groupBox4.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.groupBox4.Name = "groupBox4";
@@ -400,26 +400,26 @@ namespace LH_LaserAnalyzer
             this.groupBox4.Size = new System.Drawing.Size(674, 376);
             this.groupBox4.TabIndex = 49;
             this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "報表設定";
+            this.groupBox4.Text = "表單設定";
             // 
             // label3
             // 
-            this.label3.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label3.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.label3.Location = new System.Drawing.Point(8, 293);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(242, 47);
             this.label3.TabIndex = 52;
-            this.label3.Text = "量測起點：";
+            this.label3.Text = "檢測人員：";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label1
             // 
-            this.label1.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label1.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.label1.Location = new System.Drawing.Point(8, 145);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(242, 47);
             this.label1.TabIndex = 52;
-            this.label1.Text = "車號：";
+            this.label1.Text = "鋼印號碼：";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // StartPlace_tb
@@ -431,12 +431,12 @@ namespace LH_LaserAnalyzer
             // 
             // label2
             // 
-            this.label2.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label2.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.label2.Location = new System.Drawing.Point(8, 220);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(242, 47);
             this.label2.TabIndex = 52;
-            this.label2.Text = "工程文號：";
+            this.label2.Text = "檢查編號：";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // LicensePlate_tb
@@ -455,12 +455,12 @@ namespace LH_LaserAnalyzer
             // 
             // label11
             // 
-            this.label11.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label11.Font = new System.Drawing.Font("微軟正黑體", 13.875F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.label11.Location = new System.Drawing.Point(8, 72);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(242, 47);
             this.label11.TabIndex = 52;
-            this.label11.Text = "單位：";
+            this.label11.Text = "設置單位：";
             this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Department_tb
