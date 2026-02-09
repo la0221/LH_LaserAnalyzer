@@ -365,7 +365,7 @@ namespace LH_LaserAnalyzer
             foreach (var v in values)
             {
                 // 忽略錯誤值 / 無效量測值
-                if (v == -999f || v == 999f)
+                if (v == -999f || v == 999f || v == -999.9f || v == 999.9f)
                     continue;
 
                 sum += v;

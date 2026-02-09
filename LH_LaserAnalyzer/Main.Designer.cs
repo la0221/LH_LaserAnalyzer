@@ -520,7 +520,7 @@ namespace LH_LaserAnalyzer
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Main";
-            this.Text = "測距收集分析軟體";
+            this.Text = "起重機旋轉盤傾斜度雷射測定儀";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
             this.Load += new System.EventHandler(this.Main_Load);
             this.groupBox10.ResumeLayout(false);

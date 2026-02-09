@@ -137,6 +137,10 @@ namespace LH_LaserAnalyzer
                     LaserDevice_Port.Parity = Parity.None;
                     LaserDevice_Port.ReadTimeout = 300;
                     LaserDevice_Port.Handshake = Handshake.None;
+                    // 新版
+                    LaserDevice_Port.DtrEnable = true;
+                    LaserDevice_Port.RtsEnable = true;
+                    // 新版
                     LaserDevice_Port.Open();
                     LaserDevice_Port.DataReceived += new SerialDataReceivedEventHandler(LaserDevice_DataReceived);
                     COM_Connect_btn.BackColor = Color.LightGreen;
